@@ -1,7 +1,7 @@
 import { ParseOptionsError, Util } from "miqro-core";
 import { IServiceArgs } from "miqro-express";
-import * as Sequelize from "sequelize";
 import { Database } from "miqro-sequelize";
+import * as Sequelize from "sequelize";
 import { AbstractModelService } from "./common";
 
 let logger = null;

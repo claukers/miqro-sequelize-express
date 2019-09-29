@@ -20,7 +20,8 @@
   "dependencies": {
     "miqro-core": "git+ssh://git@github.com/claukers/miqro-core.git#develop",
     "miqro-express": "git+ssh://git@github.com/claukers/miqro-express.git#develop",
-    "miqro-sequelize": "git+ssh://git@github.com/claukers/miqro-sequelize.git#develop"
+    "miqro-sequelize": "git+ssh://git@github.com/claukers/miqro-sequelize.git#develop",
+    "sequelize": "^5.19.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.3",
