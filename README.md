@@ -2,6 +2,8 @@
 
 **in early development not to use in production**
 
+this is a part of the ```miqro``` module and provides miqro services for sequelize models and a router to expose them.
+
 - ModelRoute, ModelService base classes.
   - route and service for exposing models with pagination, agregation and searching utilities.
 
