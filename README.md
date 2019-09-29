@@ -1,5 +1,7 @@
 # miqro-sequelize-express
 
+**in early development not to use in production**
+
 - ModelRoute, ModelService base classes.
   - route and service for exposing models with pagination, agregation and searching utilities.
 
