@@ -1,6 +1,6 @@
 import { Util } from "miqro-core";
 import { IAPIRequest, IServiceRouteOptions, ServiceArg, ServiceResponse, ServiceRoute } from "miqro-express";
-import { IModelService } from "../service";
+import { IModelService } from "miqro-sequelize";
 
 export interface IModelRoute {
   getInstance(req: IAPIRequest, res): Promise<void>;
