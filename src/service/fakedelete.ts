@@ -1,5 +1,5 @@
 import { IServiceArgs } from "miqro-express";
-import { ModelService } from "./service";
+import { ModelService } from "./model";
 
 export class FakeDeleteModelService extends ModelService {
   protected modelIsDeletedAttribute: string = "deleted";
