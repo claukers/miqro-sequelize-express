@@ -18,7 +18,7 @@
   "author": "claukers",
   "license": "ISC",
   "dependencies": {
-    "miqro-core": "^0.1.4",
+    "miqro-core": "^0.1.2",
     "miqro-express": "^0.1.4",
     "miqro-sequelize": "^0.1.2",
     "sequelize": "^5.19.1"
