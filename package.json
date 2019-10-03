@@ -20,8 +20,7 @@
   "dependencies": {
     "miqro-core": "^0.1.5",
     "miqro-express": "^0.1.7",
-    "miqro-sequelize": "^0.1.5",
-    "sequelize": "^5.19.2"
+    "miqro-sequelize": "^0.1.5"
   },
   "devDependencies": {
     "mocha": "^5.2.0",
