@@ -4,8 +4,7 @@ import * as express from "express";
 import * as sinon from "sinon";
 import * as request from "supertest";
 
-
-describe("modelhandler functional tests", () => {
+describe("ModelRoute functional tests", () => {
   it("createModelHandler get all happy path", (done) => {
     const { createModelHandler } = require("../src/");
 
