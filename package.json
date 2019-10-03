@@ -18,8 +18,9 @@
   "author": "claukers",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
     "miqro-core": "^0.1.5",
-    "miqro-express": "^0.1.7",
+    "miqro-express": "git+ssh://git@github.com/claukers/miqro-express.git#develop",
     "miqro-sequelize": "^0.1.5"
   },
   "devDependencies": {

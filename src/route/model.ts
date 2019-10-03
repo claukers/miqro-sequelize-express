@@ -1,7 +1,7 @@
 import { Util } from "miqro-core";
 import { IAPIRequest, IServiceRouteOptions, ServiceArg, ServiceResponse, ServiceRoute } from "miqro-express";
 import { IModelService } from "miqro-sequelize";
-import { IModelRoute, setupModelRouter } from "./common";
+import { createModelHandler, IModelRoute } from "./common";
 
 export class ModelRoute extends ServiceRoute implements IModelRoute {
   private logger = null;
@@ -10,7 +10,7 @@ export class ModelRoute extends ServiceRoute implements IModelRoute {
     if (!this.logger) {
       this.logger = Util.getLogger("ModelServiceRoute");
     }
-    setupModelRouter(this, this);
+    this.use(undefined, createModelHandler(this));
   }
   public async getInstance(req: IAPIRequest, res) {
     const ret = await this.service.get(new ServiceArg(req));

@@ -1,4 +1,5 @@
-import { IAPIRequest, Route } from "miqro-express";
+import { Router } from "express";
+import { IAPIRequest, IServiceHandler } from "miqro-express";
 
 export interface IModelRoute {
   getInstance(req: IAPIRequest, res): Promise<void>;
@@ -8,7 +9,8 @@ export interface IModelRoute {
   putInstance(req: IAPIRequest, res): Promise<void>;
 }
 
-export const setupModelRouter = (router: Route, handler: IModelRoute) => {
+export const createModelHandler = (handler: IModelRoute): IServiceHandler => {
+  const router = Router();
   // Get All
   router.get("/", async (req: IAPIRequest, res) => {
     return handler.getInstance(req, res);
@@ -33,4 +35,5 @@ export const setupModelRouter = (router: Route, handler: IModelRoute) => {
   router.put("/", async (req: IAPIRequest, res) => {
     return handler.putInstance(req, res);
   });
+  return router;
 };
