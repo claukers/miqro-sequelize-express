@@ -34,6 +34,7 @@ describe("ModelRoute functional tests", () => {
       }
     }
     const finalHandler = sinon.fake((req, res) => {
+      res.json(req.instance);
     });
     app.use("/user", [createModelHandler(modelService, logger), finalHandler]);
 
@@ -41,15 +42,14 @@ describe("ModelRoute functional tests", () => {
       .get('/user')
       .set({ 'TOKEN_HEADER': fakeToken })
       .expect('Content-Type', /json/)
-      .expect('Content-Length', '40')
+      .expect('Content-Length', '14')
       .expect(200)
       .end((err, res) => {
         if (err) {
           done(err);
         } else {
-          expect(res.body.success).to.be.equals(true);
-          expect(res.body.result).to.be.equals(fakeInstance);
-          expect(finalHandler.callCount).to.be.equals(0);
+          expect(res.body).to.be.equals(fakeInstance);
+          expect(finalHandler.callCount).to.be.equals(1);
           expect(modelService.get.callCount).to.be.equals(1);
           expect(modelService.post.callCount).to.be.equals(0);
           expect(modelService.patch.callCount).to.be.equals(0);
@@ -88,20 +88,22 @@ describe("ModelRoute functional tests", () => {
         console.log(text);
       }
     }
-    app.use("/user", [createModelHandler(modelService, logger)]);
+    const finalHandler = sinon.fake((req, res) => {
+      res.json(req.instance);
+    });
+    app.use("/user", [createModelHandler(modelService, logger), finalHandler]);
 
     request(app)
       .get('/user/' + fakeId)
-      .set({ 'TOKEN_HEADER': fakeToken })
       .expect('Content-Type', /json/)
-      .expect('Content-Length', '40')
+      .expect('Content-Length', '14')
       .expect(200)
       .end((err, res) => {
         if (err) {
           done(err);
         } else {
-          expect(res.body.success).to.be.equals(true);
-          expect(res.body.result).to.be.equals(fakeInstance);
+          expect(res.body).to.be.equals(fakeInstance);
+          expect(finalHandler.callCount).to.be.equals(1);
           expect(modelService.get.callCount).to.be.equals(1);
           expect(modelService.post.callCount).to.be.equals(0);
           expect(modelService.patch.callCount).to.be.equals(0);
@@ -140,20 +142,23 @@ describe("ModelRoute functional tests", () => {
         console.log(text);
       }
     }
-    app.use("/user", [createModelHandler(modelService, logger)]);
+    const finalHandler = sinon.fake((req, res) => {
+      res.json(req.instance);
+    });
+    app.use("/user", [createModelHandler(modelService, logger), finalHandler]);
 
     request(app)
       .patch('/user/' + fakeId)
       .set({ 'TOKEN_HEADER': fakeToken })
       .expect('Content-Type', /json/)
-      .expect('Content-Length', '40')
+      .expect('Content-Length', '14')
       .expect(200)
       .end((err, res) => {
         if (err) {
           done(err);
         } else {
-          expect(res.body.success).to.be.equals(true);
-          expect(res.body.result).to.be.equals(fakeInstance);
+          expect(finalHandler.callCount).to.be.equals(1);
+          expect(res.body).to.be.equals(fakeInstance);
           expect(modelService.get.callCount).to.be.equals(0);
           expect(modelService.post.callCount).to.be.equals(0);
           expect(modelService.patch.callCount).to.be.equals(1);
