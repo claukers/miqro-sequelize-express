@@ -24,9 +24,13 @@
     "miqro-sequelize": "^0.1.5"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.3",
+    "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "nyc": "^14.1.1",
     "rimraf": "^2.7.1",
+    "sinon": "^7.5.0",
+    "supertest": "^4.0.2",
     "ts-node": "^7.0.1",
     "tslint": "^5.20.0",
     "typescript": "^3.6.3"
