@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Util } from "miqro-core";
-import { IServiceHandler, IServiceRouteOptions, ServiceArg, ServiceResponse, ServiceRoute, createAPIHandler } from "miqro-express";
+import { IServiceHandler, IServiceRouteOptions, ServiceArg, ServiceResponse, ServiceRoute } from "miqro-express";
 import { IModelService } from "miqro-sequelize";
 
 export const createModelHandler = (service: IModelService, logger): IServiceHandler => {
@@ -53,11 +53,11 @@ export class ModelRoute extends ServiceRoute {
   constructor(protected service: IModelService, options?: IServiceRouteOptions) {
     super(options);
     const logger = Util.getLogger("ModelServiceRoute");
-    this.router.use([createAPIHandler(createModelHandler(this.service, logger), this), async (req, res) => {
-      await this.finalHandler(req, res);
+    this.use(undefined, [createModelHandler(service, logger), async (req, res) => {
+      await this.sendResponse(req, res);
     }]);
   }
-  protected async end(req, res) {
+  protected async sendResponse(req, res) {
     await new ServiceResponse(req.instance).send(res);
   }
 }
