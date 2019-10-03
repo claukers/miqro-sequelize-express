@@ -19,8 +19,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "miqro-core": "git+ssh://git@github.com/claukers/miqro-core.git#develop",
-    "miqro-express": "git+ssh://git@github.com/claukers/miqro-express.git#develop",
+    "miqro-core": "https://github.com/claukers/miqro-core.git#develop",
+    "miqro-express": "https://github.com/claukers/miqro-express.git#develop",
     "miqro-sequelize": "^0.1.5"
   },
   "devDependencies": {
