@@ -21,7 +21,7 @@
     "express": "^4.17.1",
     "miqro-core": "git+https://github.com/claukers/miqro-core.git#develop",
     "miqro-express": "git+https://github.com/claukers/miqro-express.git#develop",
-    "miqro-sequelize": "^0.1.5"
+    "miqro-sequelize": "git+https://github.com/claukers/miqro-sequelize.git#develop"
   },
   "devDependencies": {
     "@types/chai": "^4.2.3",

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createServiceResponseHandler, createServiceMethodHandler, IServiceHandler, IServiceRouteOptions, ServiceArg, ServiceResponse, APIRoute } from "miqro-express";
+import { APIRoute, createServiceMethodHandler, createServiceResponseHandler, IServiceHandler, IServiceRouteOptions, ServiceArg, ServiceResponse } from "miqro-express";
 import { IModelService } from "miqro-sequelize";
 
 export const createModelHandler = (service: IModelService, logger): IServiceHandler => {
