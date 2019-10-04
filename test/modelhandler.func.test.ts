@@ -34,7 +34,7 @@ describe("ModelRoute functional tests", () => {
       }
     }
     const finalHandler = sinon.fake((req, res) => {
-      res.json(req.instance);
+      res.json(req.serviceResults[0]);
     });
     app.use("/user", [createModelHandler(modelService, logger), finalHandler]);
 
@@ -89,7 +89,7 @@ describe("ModelRoute functional tests", () => {
       }
     }
     const finalHandler = sinon.fake((req, res) => {
-      res.json(req.instance);
+      res.json(req.serviceResults[0]);
     });
     app.use("/user", [createModelHandler(modelService, logger), finalHandler]);
 
@@ -143,7 +143,7 @@ describe("ModelRoute functional tests", () => {
       }
     }
     const finalHandler = sinon.fake((req, res) => {
-      res.json(req.instance);
+      res.json(req.serviceResults[0]);
     });
     app.use("/user", [createModelHandler(modelService, logger), finalHandler]);
 
