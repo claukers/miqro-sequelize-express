@@ -1,9 +1,15 @@
-import { Router } from "express";
-import { APIRoute, createResponseHandler, createServiceFunctionHandler, IServiceHandler, IServiceRouteOptions, ServiceArg, ServiceResponse } from "miqro-express";
+import {
+  APIRoute,
+  createAPIHandler,
+  createResponseHandler,
+  createServiceFunctionHandler,
+  IServiceHandler,
+  IServiceRouteOptions
+} from "miqro-express";
 import { IModelService } from "miqro-sequelize";
 
-export const createModelHandler = (service: IModelService, logger): IServiceHandler => {
-  const router = Router();
+export const createModelHandler = (service: IModelService, logger, config?: { options: IServiceRouteOptions }): IServiceHandler => {
+  const router = new APIRoute(config && config.options ? config.options : undefined);
   // Get All
   router.get("/", createServiceFunctionHandler(service, "get", logger));
   // Get by Id
@@ -16,7 +22,7 @@ export const createModelHandler = (service: IModelService, logger): IServiceHand
   router.patch("/:id", createServiceFunctionHandler(service, "patch", logger));
   // Put
   router.put("/", createServiceFunctionHandler(service, "put", logger));
-  return router;
+  return router.routes();
 };
 
 export class ModelRoute extends APIRoute {
@@ -24,8 +30,10 @@ export class ModelRoute extends APIRoute {
   constructor(protected service: IModelService, options?: IServiceRouteOptions) {
     super(options);
     this.sendResponse = createResponseHandler(this.logger);
-    this.use(undefined, [createModelHandler(service, this.logger), async (req, res) => {
-      await this.sendResponse(req, res);
-    }]);
+    this.router.use([
+      createModelHandler(service, this.logger, { options }),
+      createAPIHandler(async (req, res) => {
+        await this.sendResponse(req, res);
+      }, this.logger)[0]]);
   }
 }
