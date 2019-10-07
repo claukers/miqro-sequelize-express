@@ -32,8 +32,8 @@ export class ModelRoute extends APIRoute {
     this.sendResponse = createResponseHandler(this.logger);
     this.router.use([
       createModelHandler(service, this.logger, { options }),
-      createAPIHandler(async (req, res) => {
-        await this.sendResponse(req, res);
+      createAPIHandler(async (req, res, next) => {
+        await this.sendResponse(req, res, next);
       }, this.logger)[0]]);
   }
 }
