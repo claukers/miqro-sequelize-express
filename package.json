@@ -20,7 +20,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "miqro-core": "^0.1.7",
-    "miqro-express": "^0.1.14",
+    "miqro-express": "^0.1.15",
     "miqro-sequelize": "^0.1.8"
   },
   "devDependencies": {
