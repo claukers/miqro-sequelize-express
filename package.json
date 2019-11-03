@@ -19,9 +19,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "miqro-core": "^0.1.6",
-    "miqro-express": "^0.1.11",
-    "miqro-sequelize": "^0.1.6"
+    "miqro-core": "^0.1.7",
+    "miqro-express": "^0.1.12",
+    "miqro-sequelize": "^0.1.7"
   },
   "devDependencies": {
     "@types/chai": "^4.2.3",

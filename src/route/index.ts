@@ -1,13 +1,5 @@
-import { Router } from "express";
-import {
-  APIRoute,
-  createAPIHandler,
-  createResponseHandler,
-  createServiceFunctionHandler,
-  IRouteOptions,
-  IServiceHandler
-} from "miqro-express";
-import { IModelService } from "miqro-sequelize";
+import {APIRoute, createAPIHandler, createResponseHandler, createServiceFunctionHandler, IRouteOptions, IServiceHandler} from "miqro-express";
+import {IModelService} from "miqro-sequelize";
 
 export const createModelHandler = (service: IModelService, logger, config?: { options: IRouteOptions }): IServiceHandler => {
   const router = new APIRoute(config && config.options ? config.options : undefined);
@@ -28,11 +20,12 @@ export const createModelHandler = (service: IModelService, logger, config?: { op
 
 export class ModelRoute extends APIRoute {
   protected sendResponse: IServiceHandler = null;
+
   constructor(protected service: IModelService, options?: IRouteOptions) {
     super(options);
     this.sendResponse = createResponseHandler(this.logger);
     this.router.use([
-      createModelHandler(service, this.logger, { options }),
+      createModelHandler(service, this.logger, {options}),
       createAPIHandler(async (req, res, next) => {
         await this.sendResponse(req, res, next);
       }, this.logger)[0]]);
