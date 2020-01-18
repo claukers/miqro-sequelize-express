@@ -1,6 +1,6 @@
 {
   "name": "miqro-sequelize-express",
-  "version": "0.2.1",
+  "version": "0.4.0",
   "description": "",
   "main": "dist/index.js",
   "repository": {
@@ -20,7 +20,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "miqro-core": "^0.2.1",
-    "miqro-express": "git+https://github.com/claukers/miqro-express.git#ng",
+    "miqro-express": "^0.4.1",
     "miqro-sequelize": "^0.2.1"
   },
   "devDependencies": {
