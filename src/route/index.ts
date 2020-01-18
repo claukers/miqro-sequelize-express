@@ -1,33 +1,36 @@
-import {APIRoute, createAPIHandler, createResponseHandler, createServiceFunctionHandler, IRouteOptions, IServiceHandler} from "miqro-express";
+import {Router} from "express";
+import {MethodNotImplementedError} from "miqro-core";
+import {Handler, ResponseHandler} from "miqro-express";
 import {IModelService} from "miqro-sequelize";
 
-export const createModelHandler = (service: IModelService, logger, config?: { options: IRouteOptions }): IServiceHandler => {
-  const router = new APIRoute(config && config.options ? config.options : undefined);
-  // Get All
-  router.get("/", createServiceFunctionHandler(service, "get", logger, config));
-  // Get by Id
-  router.get("/:id", createServiceFunctionHandler(service, "get", logger, config));
-  // Post
-  router.post("/", createServiceFunctionHandler(service, "post", logger, config));
-  // Delete by id
-  router.delete("/:id", createServiceFunctionHandler(service, "delete", logger, config));
-  // Patch by id
-  router.patch("/:id", createServiceFunctionHandler(service, "patch", logger, config));
-  // Put
-  router.put("/", createServiceFunctionHandler(service, "put", logger, config));
-  return router.routes();
+export const ModelHandler = (service: IModelService, logger?) => {
+  return Handler(async (req) => {
+    switch (req.method.toUpperCase()) {
+      case "GET":
+        return service.get(req as any);
+      case "POST":
+        return service.post(req as any);
+      case "PATCH":
+        return service.patch(req as any);
+      case "PUT":
+        return service.put(req as any);
+      case "DELETE":
+        return service.delete(req as any);
+      default:
+        throw new MethodNotImplementedError(`method[${req.method}] not implemented`);
+    }
+  }, logger);
 };
 
-export class ModelRoute extends APIRoute {
-  protected sendResponse: IServiceHandler = null;
-
-  constructor(protected service: IModelService, options?: IRouteOptions) {
-    super(options);
-    this.sendResponse = createResponseHandler(this.logger);
-    this.router.use([
-      createModelHandler(service, this.logger, {options}),
-      createAPIHandler(async (req, res, next) => {
-        await this.sendResponse(req, res, next);
-      }, this.logger)[0]]);
+export const ModelRouter = (service: IModelService, router?: Router, logger?) => {
+  if (!router) {
+    router = Router();
   }
-}
+  router.get("/", [ModelHandler(service, logger), ResponseHandler(logger)]);
+  router.get("/:id", [ModelHandler(service, logger), ResponseHandler(logger)]);
+  router.patch("/", [ModelHandler(service, logger), ResponseHandler(logger)]);
+  router.post("/", [ModelHandler(service, logger), ResponseHandler(logger)]);
+  router.put("/", [ModelHandler(service, logger), ResponseHandler(logger)]);
+  router.delete("/", [ModelHandler(service, logger), ResponseHandler(logger)]);
+  return router;
+};

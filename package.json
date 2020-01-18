@@ -20,7 +20,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "miqro-core": "^0.2.1",
-    "miqro-express": "^0.2.2",
+    "miqro-express": "git+https://github.com/claukers/miqro-express.git#ng",
     "miqro-sequelize": "^0.2.1"
   },
   "devDependencies": {
