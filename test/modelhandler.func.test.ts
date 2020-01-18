@@ -1,12 +1,12 @@
-import { describe, it } from "mocha";
-import { expect } from "chai";
+import {describe, it} from "mocha";
+import {expect} from "chai";
 import * as express from "express";
 import * as sinon from "sinon";
 import * as request from "supertest";
 
 describe("ModelHandler functional tests", () => {
   it("ModelHandler get all happy path", (done) => {
-    const { ModelHandler } = require("../src/");
+    const {ModelHandler} = require("../src/");
 
     const fakeToken = "FakeToken";
     const fakeInstance = "FakeInstance";
@@ -35,7 +35,7 @@ describe("ModelHandler functional tests", () => {
 
     request(app)
       .get('/user')
-      .set({ 'TOKEN_HEADER': fakeToken })
+      .set({'TOKEN_HEADER': fakeToken})
       //.expect('Content-Type', /json/)
       //.expect('Content-Length', '14')
       //.expect(200)
@@ -55,7 +55,7 @@ describe("ModelHandler functional tests", () => {
   });
 
   it("ModelHandler get by id happy path", (done) => {
-    const { ModelHandler } = require("../src/");
+    const {ModelHandler} = require("../src/");
 
     const fakeId = "FakeId";
     const fakeToken = "FakeToken";
@@ -82,7 +82,7 @@ describe("ModelHandler functional tests", () => {
       debug: (text) => {
         console.log(text);
       }
-    }
+    };
     const finalHandler = sinon.fake((req, res) => {
       res.json(req.results[0]);
     });
@@ -109,7 +109,7 @@ describe("ModelHandler functional tests", () => {
   });
 
   it("ModelHandler patch by id happy path", (done) => {
-    const { ModelHandler } = require("../src/");
+    const {ModelHandler} = require("../src/");
 
     const fakeId = "FakeId";
     const fakeToken = "FakeToken";
@@ -119,7 +119,7 @@ describe("ModelHandler functional tests", () => {
     const app = express();
     const modelService = {
       get: sinon.fake(async (args) => {
-        
+
       }),
       post: sinon.fake(async (args) => {
 
@@ -136,7 +136,7 @@ describe("ModelHandler functional tests", () => {
       debug: (text) => {
         console.log(text);
       }
-    }
+    };
     const finalHandler = sinon.fake((req, res) => {
       res.json(req.results[0]);
     });
@@ -144,7 +144,7 @@ describe("ModelHandler functional tests", () => {
 
     request(app)
       .patch('/user/' + fakeId)
-      .set({ 'TOKEN_HEADER': fakeToken })
+      .set({'TOKEN_HEADER': fakeToken})
       .expect('Content-Type', /json/)
       .expect('Content-Length', '14')
       .expect(200)
@@ -164,7 +164,7 @@ describe("ModelHandler functional tests", () => {
   });
 
   it("ModelHandler post by id happy path", (done) => {
-    const { ModelHandler } = require("../src/");
+    const {ModelHandler} = require("../src/");
 
     const fakeId = "FakeId";
     const fakeToken = "FakeToken";
@@ -191,7 +191,7 @@ describe("ModelHandler functional tests", () => {
       debug: (text) => {
         console.log(text);
       }
-    }
+    };
     const finalHandler = sinon.fake((req, res) => {
       res.json(req.results[0]);
     });
@@ -199,7 +199,7 @@ describe("ModelHandler functional tests", () => {
 
     request(app)
       .post('/user/' + fakeId)
-      .set({ 'TOKEN_HEADER': fakeToken })
+      .set({'TOKEN_HEADER': fakeToken})
       .expect('Content-Type', /json/)
       .expect('Content-Length', '14')
       .expect(200)
@@ -219,7 +219,7 @@ describe("ModelHandler functional tests", () => {
   });
 
   it("ModelHandler put by id happy path", (done) => {
-    const { ModelHandler } = require("../src/");
+    const {ModelHandler} = require("../src/");
 
     const fakeId = "FakeId";
     const fakeToken = "FakeToken";
@@ -248,7 +248,7 @@ describe("ModelHandler functional tests", () => {
       debug: (text) => {
         console.log(text);
       }
-    }
+    };
     const finalHandler = sinon.fake((req, res) => {
       res.json(req.results[0]);
     });
@@ -256,7 +256,7 @@ describe("ModelHandler functional tests", () => {
 
     request(app)
       .put('/user/' + fakeId)
-      .set({ 'TOKEN_HEADER': fakeToken })
+      .set({'TOKEN_HEADER': fakeToken})
       .expect('Content-Type', /json/)
       .expect('Content-Length', '14')
       .expect(200)
@@ -277,7 +277,7 @@ describe("ModelHandler functional tests", () => {
   });
 
   it("ModelHandler delete by id happy path", (done) => {
-    const { ModelHandler } = require("../src/");
+    const {ModelHandler} = require("../src/");
 
     const fakeId = "FakeId";
     const fakeToken = "FakeToken";
@@ -304,7 +304,7 @@ describe("ModelHandler functional tests", () => {
       debug: (text) => {
         console.log(text);
       }
-    }
+    };
     const finalHandler = sinon.fake((req, res) => {
       res.json(req.results[0]);
     });
@@ -312,7 +312,7 @@ describe("ModelHandler functional tests", () => {
 
     request(app)
       .delete('/user/' + fakeId)
-      .set({ 'TOKEN_HEADER': fakeToken })
+      .set({'TOKEN_HEADER': fakeToken})
       .expect('Content-Type', /json/)
       .expect('Content-Length', '14')
       .expect(200)
@@ -329,5 +329,15 @@ describe("ModelHandler functional tests", () => {
           done();
         }
       });
+  });
+
+  it("ModelHandler custom method not implemented", (done) => {
+    const {ModelHandler} = require("../src/");
+
+    ModelHandler()({method: "custom"}).catch((e) => {
+      expect(e.name).to.be.equals("MethodNotImplementedError");
+      expect(e.message).to.be.equals("method custom not implemented!");
+      done();
+    });
   });
 });

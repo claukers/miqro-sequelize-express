@@ -17,7 +17,7 @@ export const ModelHandler = (service: IModelService, logger?) => {
       case "DELETE":
         return service.delete(req as any);
       default:
-        throw new MethodNotImplementedError(`method[${req.method}] not implemented`);
+        throw new MethodNotImplementedError(`${req.method}`);
     }
   }, logger);
 };
@@ -26,11 +26,11 @@ export const ModelRouter = (service: IModelService, router?: Router, logger?) =>
   if (!router) {
     router = Router();
   }
-  router.get("/", [ModelHandler(service, logger), ResponseHandler(logger)]);
   router.get("/:id", [ModelHandler(service, logger), ResponseHandler(logger)]);
-  router.patch("/", [ModelHandler(service, logger), ResponseHandler(logger)]);
-  router.post("/", [ModelHandler(service, logger), ResponseHandler(logger)]);
-  router.put("/", [ModelHandler(service, logger), ResponseHandler(logger)]);
-  router.delete("/", [ModelHandler(service, logger), ResponseHandler(logger)]);
+  router.get("/", [ModelHandler(service, logger), ResponseHandler(logger)]);
+  router.patch("/:id", [ModelHandler(service, logger), ResponseHandler(logger)]);
+  router.post("/:id", [ModelHandler(service, logger), ResponseHandler(logger)]);
+  router.put("/:id", [ModelHandler(service, logger), ResponseHandler(logger)]);
+  router.delete("/:id", [ModelHandler(service, logger), ResponseHandler(logger)]);
   return router;
 };
