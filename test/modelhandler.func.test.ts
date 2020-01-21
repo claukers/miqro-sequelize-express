@@ -334,7 +334,9 @@ describe("ModelHandler functional tests", () => {
   it("ModelHandler custom method not implemented", (done) => {
     const {ModelHandler} = require("../src/");
 
-    ModelHandler()({method: "custom"}).catch((e) => {
+    ModelHandler()({method: "custom"}, undefined, (e) => {
+      throw e;
+    }).catch((e) => {
       expect(e.name).to.be.equals("MethodNotImplementedError");
       expect(e.message).to.be.equals("method custom not implemented!");
       done();
