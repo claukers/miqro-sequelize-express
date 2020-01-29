@@ -15,7 +15,7 @@
 
 ▸ **ModelHandler**(`service`: IModelService, `logger?`: any): *function*
 
-*Defined in [src/route/index.ts:6](https://github.com/claukers/miqro-sequelize-express/blob/8752609/src/route/index.ts#L6)*
+*Defined in [src/route/index.ts:6](https://github.com/claukers/miqro-sequelize-express/blob/7dd2c2f/src/route/index.ts#L6)*
 
 **Parameters:**
 
@@ -42,7 +42,7 @@ ___
 
 ▸ **ModelRouter**(`service`: IModelService, `router?`: Router, `logger?`: any): *Router‹›*
 
-*Defined in [src/route/index.ts:25](https://github.com/claukers/miqro-sequelize-express/blob/8752609/src/route/index.ts#L25)*
+*Defined in [src/route/index.ts:25](https://github.com/claukers/miqro-sequelize-express/blob/7dd2c2f/src/route/index.ts#L25)*
 
 **Parameters:**
 
