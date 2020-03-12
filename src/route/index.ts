@@ -1,7 +1,7 @@
+import {MethodNotImplementedError} from "@miqro/core";
+import {IModelService} from "@miqro/database";
+import {getResults, Handler, NextErrorHandler, ResponseHandler, setResults} from "@miqro/handlers";
 import {Router} from "express";
-import {MethodNotImplementedError} from "miqro-core";
-import {getResults, Handler, NextErrorHandler, ResponseHandler, setResults} from "miqro-express";
-import {IModelService} from "miqro-sequelize";
 
 export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[]) => any, logger?: any) => {
   return NextErrorHandler(async (req, res, next) => {

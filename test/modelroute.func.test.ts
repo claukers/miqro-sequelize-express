@@ -1,8 +1,8 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { Util } from "miqro-core";
+import { Util } from "@miqro/core";
 import * as express from "express";
-import { APIResponse } from "miqro-express";
+import { APIResponse } from "@miqro/handlers";
 import * as sinon from "sinon";
 import * as request from "supertest";
 import * as path from "path";

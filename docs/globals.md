@@ -1,6 +1,6 @@
-[miqro-sequelize-express](README.md) › [Globals](globals.md)
+[@miqro/modelhandlers](README.md) › [Globals](globals.md)
 
-# miqro-sequelize-express
+# @miqro/modelhandlers
 
 ## Index
 

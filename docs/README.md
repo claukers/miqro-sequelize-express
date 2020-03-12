@@ -1,12 +1,12 @@
-[miqro-sequelize-express](README.md) › [Globals](globals.md)
+[@miqro/modelhandlers](README.md) › [Globals](globals.md)
 
-# miqro-sequelize-express
+# @miqro/modelhandlers
 
-# miqro-sequelize-express
+# @miqro/modelhandlers
 
 **in early development not to use in production**
 
-this is a part of the ```miqro``` module and provides miqro services for sequelize models and a router to expose them.
+this is a part of the ```@miqro``` modules and provides miqro services for sequelize models and a router to expose them.
 
 - ModelRoute, ModelService base classes.
   - route and service for exposing models with pagination, agregation and searching utilities.
@@ -14,14 +14,14 @@ this is a part of the ```miqro``` module and provides miqro services for sequeli
 ```javascript
 const {
   Util
-} = require("miqro-core");
+} = require("@miqro/core");
 const {
   Database
-} = require("miqro-sequelize");
+} = require("@miqro/database");
 const {
   ModelRoute,
   ModelService
-} = require("miqro-sequelize-express");
+} = require("@miqro/modelhandlers");
 
 const logger = Util.getLogger("posts.js");
 const db = Database.getInstance();
@@ -57,6 +57,10 @@ TODO
 TODO
 
 ## Searching
+
+TODO
+
+## Mapping results
 
 TODO
 
