@@ -1,10 +1,10 @@
 import {Router} from "express";
 import {MethodNotImplementedError} from "miqro-core";
-import {getResults, Handler, ResponseHandler, setResults} from "miqro-express";
+import {getResults, Handler, NextErrorHandler, ResponseHandler, setResults} from "miqro-express";
 import {IModelService} from "miqro-sequelize";
 
 export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[]) => any, logger?: any) => {
-  return Handler(async (req) => {
+  return NextErrorHandler(async (req, res, next) => {
     const results = getResults(req);
     if (results) {
       const mappedResults = results.map((result) => {
@@ -25,6 +25,7 @@ export const MapModelHandler = (callbackfn: (value: any, index: number, array: a
         }
       });
       setResults(req, mappedResults);
+      next();
     }
   }, logger);
 };
