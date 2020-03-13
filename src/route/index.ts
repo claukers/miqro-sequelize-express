@@ -1,9 +1,16 @@
 import {MethodNotImplementedError} from "@miqro/core";
 import {IModelService} from "@miqro/database";
-import {getResults, Handler, NextErrorHandler, ResponseHandler, setResults} from "@miqro/handlers";
+import {
+  getResults,
+  Handler,
+  INextHandlerCallback,
+  NextErrorHandler,
+  ResponseHandler,
+  setResults
+} from "@miqro/handlers";
 import {Router} from "express";
 
-export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[]) => any, logger?: any) => {
+export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[]) => any, logger?: any): INextHandlerCallback => {
   return NextErrorHandler(async (req, res, next) => {
     const results = getResults(req);
     if (results) {
@@ -30,19 +37,19 @@ export const MapModelHandler = (callbackfn: (value: any, index: number, array: a
   }, logger);
 };
 
-export const ModelHandler = (service: IModelService, logger?) => {
+export const ModelHandler = (service: IModelService, logger?): INextHandlerCallback => {
   return Handler(async (req) => {
     switch (req.method.toUpperCase()) {
       case "GET":
-        return service.get(req as any);
+        return service.get(req);
       case "POST":
-        return service.post(req as any);
+        return service.post(req);
       case "PATCH":
-        return service.patch(req as any);
+        return service.patch(req);
       case "PUT":
-        return service.put(req as any);
+        return service.put(req);
       case "DELETE":
-        return service.delete(req as any);
+        return service.delete(req);
       default:
         throw new MethodNotImplementedError(`${req.method}`);
     }
