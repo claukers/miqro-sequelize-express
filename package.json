@@ -23,8 +23,7 @@
   "dependencies": {
     "@miqro/core": "^0.3.8",
     "@miqro/database": "^0.2.10",
-    "@miqro/handlers": "^0.4.12",
-    "express": "^4.17.1"
+    "@miqro/handlers": "^0.4.12"
   },
   "devDependencies": {
     "chai": "^4.2.0",
