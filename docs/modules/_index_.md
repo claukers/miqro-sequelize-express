@@ -8,21 +8,20 @@
 
 * [MapModelHandler](_index_.md#const-mapmodelhandler)
 * [ModelHandler](_index_.md#const-modelhandler)
-* [ModelRouter](_index_.md#const-modelrouter)
 
 ## Functions
 
 ### `Const` MapModelHandler
 
-▸ **MapModelHandler**(`callbackfn`: function, `logger?`: any): *function*
+▸ **MapModelHandler**(`callbackfn`: function, `logger?`: any): *INextHandlerCallback*
 
-*Defined in [src/route/index.ts:6](https://github.com/claukers/miqro-sequelize-express/blob/36335f1/src/route/index.ts#L6)*
+*Defined in [index.ts:11](https://github.com/claukers/miqro-sequelize-express/blob/639c4be/src/index.ts#L11)*
 
 **Parameters:**
 
 ▪ **callbackfn**: *function*
 
-▸ (`value`: any, `index`: number, `array`: any[]): *any*
+▸ (`value`: any, `index`: number, `array`: any[], `req`: any): *any*
 
 **Parameters:**
 
@@ -31,28 +30,19 @@ Name | Type |
 `value` | any |
 `index` | number |
 `array` | any[] |
+`req` | any |
 
 ▪`Optional`  **logger**: *any*
 
-**Returns:** *function*
-
-▸ (`req`: any, `res`: any, `next`: any): *Promise‹void›*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`req` | any |
-`res` | any |
-`next` | any |
+**Returns:** *INextHandlerCallback*
 
 ___
 
 ### `Const` ModelHandler
 
-▸ **ModelHandler**(`service`: IModelService, `logger?`: any): *function*
+▸ **ModelHandler**(`service`: IModelService, `logger?`: any): *INextHandlerCallback*
 
-*Defined in [src/route/index.ts:33](https://github.com/claukers/miqro-sequelize-express/blob/36335f1/src/route/index.ts#L33)*
+*Defined in [index.ts:44](https://github.com/claukers/miqro-sequelize-express/blob/639c4be/src/index.ts#L44)*
 
 **Parameters:**
 
@@ -61,32 +51,4 @@ Name | Type |
 `service` | IModelService |
 `logger?` | any |
 
-**Returns:** *function*
-
-▸ (`req`: any, `res`: any, `next`: any): *Promise‹void›*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`req` | any |
-`res` | any |
-`next` | any |
-
-___
-
-### `Const` ModelRouter
-
-▸ **ModelRouter**(`service`: IModelService, `router?`: Router, `logger?`: any): *Router‹›*
-
-*Defined in [src/route/index.ts:52](https://github.com/claukers/miqro-sequelize-express/blob/36335f1/src/route/index.ts#L52)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`service` | IModelService |
-`router?` | Router |
-`logger?` | any |
-
-**Returns:** *Router‹›*
+**Returns:** *INextHandlerCallback*
