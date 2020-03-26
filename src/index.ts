@@ -8,7 +8,7 @@ import {
   setResults
 } from "@miqro/handlers";
 
-export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[]) => any, logger?: any): INextHandlerCallback => {
+export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any, logger?: any): INextHandlerCallback => {
   return NextErrorHandler(async (req, res, next) => {
     const results = getResults(req);
     if (results) {
@@ -17,14 +17,20 @@ export const MapModelHandler = (callbackfn: (value: any, index: number, array: a
           return null;
         } else {
           if (result instanceof Array) {
-            return result.map(callbackfn);
+            return result.map((value, index, array) => {
+              return callbackfn(value, index, array, req);
+            });
           } else if (result.rows instanceof Array) {
             return {
               count: result.count,
-              rows: result.rows.map(callbackfn)
+              rows: result.rows.map((value, index, array) => {
+                return callbackfn(value, index, array, req);
+              })
             };
           } else {
-            const [ret] = [result].map(callbackfn);
+            const [ret] = [result].map((value, index, array) => {
+              return callbackfn(value, index, array, req);
+            });
             return ret;
           }
         }
