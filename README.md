@@ -2,10 +2,7 @@
 
 **in early development not to use in production**
 
-this is a part of the ```@miqro``` modules and provides miqro services for sequelize models and a router to expose them.
-
-- ModelRoute, ModelService base classes.
-  - route and service for exposing models with pagination, agregation and searching utilities.
+this is a part of the ```@miqro``` modules and integrates ```@miqro/database```.
 
 ```javascript
 const {
@@ -15,7 +12,9 @@ const {
   Database
 } = require("@miqro/database");
 const {
-  ModelRoute,
+  ResponseHandler
+} = require("@miqro/handlers");
+const {
   ModelService
 } = require("@miqro/modelhandlers");
 
@@ -28,18 +27,11 @@ module.exports = async (app) => {
   * GET /post/:id
   * PATCH /post/:id
   * POST /post/
-  * 
-  * for model db.models.post
-  * to allow delete add it to the allowedMethods list
   */
-  app.use("/post",
-    new ModelRoute(
-      new ModelService(
-        db.models.post
-      ),
-      {
-        allowedMethods: ["GET", "POST", "PATCH"]
-      }).routes());
+  app.use("/post/:id?", [
+    ModelHandler(new ModelService(db.models.get, logger), 
+    ResponseHandler(logger)
+  ]);
   return app;
 };
 ```

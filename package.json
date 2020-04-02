@@ -21,9 +21,9 @@
   "author": "claukers",
   "license": "ISC",
   "dependencies": {
-    "@miqro/core": "^0.5.0",
-    "@miqro/database": "^0.3.0",
-    "@miqro/handlers": "^0.5.2"
+    "@miqro/core": "^0.5.1",
+    "@miqro/database": "^0.4.0",
+    "@miqro/handlers": "^0.5.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",
