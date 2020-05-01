@@ -1,5 +1,5 @@
 import {MethodNotImplementedError} from "@miqro/core";
-import {IModelService} from "@miqro/database";
+import {ModelServiceInterface} from "@miqro/database";
 import {
   getResults,
   Handler,
@@ -41,7 +41,7 @@ export const MapModelHandler = (callbackfn: (value: any, index: number, array: a
   }, logger);
 };
 
-export const ModelHandler = (service: IModelService, logger?): INextHandlerCallback => {
+export const ModelHandler = (service: ModelServiceInterface, logger?): INextHandlerCallback => {
   return Handler(async (req) => {
     switch (req.method.toUpperCase()) {
       case "GET":

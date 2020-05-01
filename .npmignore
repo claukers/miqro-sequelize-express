@@ -15,6 +15,7 @@ apidoc/
 docs/
 src/
 test/
+.eslintrc
 tslint.json
 tsconfig.json
 .editorconfig
