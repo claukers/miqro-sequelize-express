@@ -15,7 +15,7 @@
 
 ▸ **MapModelHandler**(`callbackfn`: function, `logger?`: any): *INextHandlerCallback*
 
-*Defined in [index.ts:11](https://github.com/claukers/miqro-sequelize-express/blob/639c4be/src/index.ts#L11)*
+*Defined in [index.ts:11](https://github.com/claukers/miqro-sequelize-express/blob/574587d/src/index.ts#L11)*
 
 **Parameters:**
 
@@ -40,15 +40,15 @@ ___
 
 ### `Const` ModelHandler
 
-▸ **ModelHandler**(`service`: IModelService, `logger?`: any): *INextHandlerCallback*
+▸ **ModelHandler**(`service`: ModelServiceInterface, `logger?`: any): *INextHandlerCallback*
 
-*Defined in [index.ts:44](https://github.com/claukers/miqro-sequelize-express/blob/639c4be/src/index.ts#L44)*
+*Defined in [index.ts:44](https://github.com/claukers/miqro-sequelize-express/blob/574587d/src/index.ts#L44)*
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`service` | IModelService |
+`service` | ModelServiceInterface |
 `logger?` | any |
 
 **Returns:** *INextHandlerCallback*
