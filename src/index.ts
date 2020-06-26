@@ -1,7 +1,5 @@
-import {MethodNotImplementedError} from "@miqro/core";
-import {ModelServiceInterface} from "@miqro/database";
+import {Logger, MethodNotImplementedError, ModelServiceInterface} from "@miqro/core";
 import {getResults, Handler, INextHandlerCallback, NextErrorHandler, setResults} from "@miqro/handlers";
-import {Logger} from "winston";
 
 export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any, logger?: Logger): INextHandlerCallback => {
   return NextErrorHandler(async (req, res, next) => {
