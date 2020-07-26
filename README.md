@@ -1,21 +1,20 @@
 # @miqro/modelhandlers
 
-**in early development not to use in production**
-
-this is a part of the ```@miqro``` modules and integrates ```@miqro/database```.
+this modules provides express handlers for exposing sequelize **models**. 
 
 ```javascript
 const {
   Util
 } = require("@miqro/core");
 const {
-  Database
+  Database,
+  ModelService
 } = require("@miqro/database");
 const {
   ResponseHandler
 } = require("@miqro/handlers");
 const {
-  ModelService
+  ModelHandler
 } = require("@miqro/modelhandlers");
 
 const logger = Util.getLogger("posts.js");
@@ -29,29 +28,56 @@ module.exports = async (app) => {
   * POST /post/
   */
   app.use("/post/:id?", [
-    ModelHandler(new ModelService(db.models.get, logger), 
+    ModelHandler(new ModelService(db.models.post), logger), 
     ResponseHandler(logger)
   ]);
   return app;
 };
 ```
 
-## Pagination
+##### get query params
 
-TODO
+- req.query.pagination
 
-## Agregation
+    TODO
 
-TODO
+    ```json
+    ?pagination=...
+    ```
 
-## Searching
+- req.query.pagination.search
 
-TODO
+    TODO
 
-## Mapping results
+    ```json
+    ?pagination={..."search": {...},...}
+    ```
 
-TODO
+- req.query.include
 
-## Documentation
+    this is used as the **include** argument in **sequelize::model::findAll**, **sequelize::model::findByPk** and .... 
+
+    ```json
+    ?include=[...]
+    ```
+
+##### MapModelHandler(...)
+
+```javascript
+...
+app.use(.., [
+    ModelHandler(...),
+    MapModelHandler((value, index, array, req) => {
+        return {
+            ... 
+        } // every result from the ModelHandler will be mapped by this
+    }),
+    ResponseHandler(...) 
+]);
+
+...
+```
+
+### documentation
 
 [globals](docs/globals.md)

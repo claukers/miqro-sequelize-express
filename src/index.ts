@@ -1,8 +1,9 @@
-import {Logger, MethodNotImplementedError, ModelServiceInterface} from "@miqro/core";
-import {getResults, Handler, INextHandlerCallback, NextErrorHandler, setResults} from "@miqro/handlers";
+import {Logger, MethodNotImplementedError} from "@miqro/core";
+import {ModelServiceInterface} from "@miqro/database";
+import {AsyncNextCallback, getResults, Handler, NextCallback, setResults} from "@miqro/handlers";
 
-export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any, logger?: Logger): INextHandlerCallback => {
-  return NextErrorHandler(async (req, res, next) => {
+export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any, logger?: Logger): AsyncNextCallback => {
+  return async (req, res, next) => {
     const results = getResults(req);
     if (results) {
       const mappedResults = results.map((result) => {
@@ -31,10 +32,10 @@ export const MapModelHandler = (callbackfn: (value: any, index: number, array: a
       setResults(req, mappedResults);
       next();
     }
-  }, logger);
+  };
 };
 
-export const ModelHandler = (service: ModelServiceInterface, logger?: Logger): INextHandlerCallback => {
+export const ModelHandler = (service: ModelServiceInterface, logger?: Logger): NextCallback => {
   return Handler(async (req) => {
     switch (req.method.toUpperCase()) {
       case "GET":

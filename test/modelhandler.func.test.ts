@@ -335,10 +335,56 @@ describe("ModelHandler functional tests", () => {
     const {ModelHandler} = require("../src/");
 
     ModelHandler()({method: "custom"}, undefined, (e) => {
-      throw e;
-    }).catch((e) => {
       expect(e.name).to.be.equals("MethodNotImplementedError");
       expect(e.message).to.be.equals("method custom not implemented!");
+      done();
+    });
+  });
+
+  it("ModelHandler get method throws", (done) => {
+    const {ModelHandler} = require("../src/");
+    const err = new Error("bla");
+    const modelService = {
+      get: sinon.fake(async (args) => {
+        throw err;
+      }),
+      post: sinon.fake(async (args) => {
+
+      }),
+      patch: sinon.fake(async (args) => {
+
+      }),
+      delete: sinon.fake(async (args) => {
+
+      })
+    };
+    ModelHandler(modelService)({method: "get"}, undefined, (e) => {
+      expect(e).to.be.equals(err);
+      expect(e.message).to.be.equals("bla");
+      done();
+    });
+  });
+
+  it("ModelHandler delete method throws", (done) => {
+    const {ModelHandler} = require("../src/");
+    const err = new Error("blp");
+    const modelService = {
+      get: sinon.fake(async (args) => {
+
+      }),
+      post: sinon.fake(async (args) => {
+
+      }),
+      patch: sinon.fake(async (args) => {
+
+      }),
+      delete: sinon.fake(async (args) => {
+        throw err;
+      })
+    };
+    ModelHandler(modelService)({method: "delete"}, undefined, (e) => {
+      expect(e).to.be.equals(err);
+      expect(e.message).to.be.equals("blp");
       done();
     });
   });
