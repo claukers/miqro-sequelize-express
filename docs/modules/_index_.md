@@ -13,9 +13,9 @@
 
 ### `Const` MapModelHandler
 
-▸ **MapModelHandler**(`callbackfn`: function, `logger?`: any): *INextHandlerCallback*
+▸ **MapModelHandler**(`callbackfn`: function, `logger?`: Logger): *AsyncNextCallback*
 
-*Defined in [index.ts:11](https://github.com/claukers/miqro-sequelize-express/blob/574587d/src/index.ts#L11)*
+*Defined in [index.ts:5](https://github.com/claukers/miqro-sequelize-express/blob/48ce98d/src/index.ts#L5)*
 
 **Parameters:**
 
@@ -32,23 +32,23 @@ Name | Type |
 `array` | any[] |
 `req` | any |
 
-▪`Optional`  **logger**: *any*
+▪`Optional`  **logger**: *Logger*
 
-**Returns:** *INextHandlerCallback*
+**Returns:** *AsyncNextCallback*
 
 ___
 
 ### `Const` ModelHandler
 
-▸ **ModelHandler**(`service`: ModelServiceInterface, `logger?`: any): *INextHandlerCallback*
+▸ **ModelHandler**(`service`: ModelServiceInterface, `logger?`: Logger): *NextCallback*
 
-*Defined in [index.ts:44](https://github.com/claukers/miqro-sequelize-express/blob/574587d/src/index.ts#L44)*
+*Defined in [index.ts:38](https://github.com/claukers/miqro-sequelize-express/blob/48ce98d/src/index.ts#L38)*
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `service` | ModelServiceInterface |
-`logger?` | any |
+`logger?` | Logger |
 
-**Returns:** *INextHandlerCallback*
+**Returns:** *NextCallback*
