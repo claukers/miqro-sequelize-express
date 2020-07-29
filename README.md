@@ -77,7 +77,3 @@ app.use(.., [
 
 ...
 ```
-
-### documentation
-
-[globals](docs/globals.md)
