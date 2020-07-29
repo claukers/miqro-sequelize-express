@@ -1,5 +1,5 @@
 import {Logger, MethodNotImplementedError} from "@miqro/core";
-import {ModelServiceInterface} from "@miqro/database";
+import {ModelServiceArgs, ModelServiceInterface} from "@miqro/database";
 import {AsyncNextCallback, getResults, Handler, NextCallback, setResults} from "@miqro/handlers";
 
 export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any, logger?: Logger): AsyncNextCallback => {
@@ -17,7 +17,7 @@ export const MapModelHandler = (callbackfn: (value: any, index: number, array: a
           } else if (result.rows instanceof Array) {
             return {
               count: result.count,
-              rows: result.rows.map((value, index, array) => {
+              rows: result.rows.map((value: any, index: number, array: any[]) => {
                 return callbackfn(value, index, array, req);
               })
             };
@@ -39,15 +39,15 @@ export const ModelHandler = (service: ModelServiceInterface, logger?: Logger): N
   return Handler(async (req) => {
     switch (req.method.toUpperCase()) {
       case "GET":
-        return service.get(req);
+        return service.get(req as ModelServiceArgs);
       case "POST":
-        return service.post(req);
+        return service.post(req as ModelServiceArgs);
       case "PATCH":
-        return service.patch(req);
+        return service.patch(req as ModelServiceArgs);
       case "PUT":
-        return service.put(req);
+        return service.put(req as ModelServiceArgs);
       case "DELETE":
-        return service.delete(req);
+        return service.delete(req as ModelServiceArgs);
       default:
         throw new MethodNotImplementedError(`${req.method}`);
     }
