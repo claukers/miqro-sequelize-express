@@ -1,10 +1,10 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "strict": true,
+    "strict": false,
     "outDir": "./dist/",
     "removeComments": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "preserveConstEnums": true,
     "sourceMap": false,
     "esModuleInterop": true,
