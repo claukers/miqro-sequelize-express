@@ -1,7 +1,8 @@
 import {describe, it} from "mocha";
 import express from "express";
 import {strictEqual} from "assert";
-import {fake, FuncTestHelper} from "./func_test_helper";
+import {fake} from "@miqro/core";
+import {TestHelper as FuncTestHelper} from "@miqro/handlers";
 
 describe("ModelHandler functional tests", () => {
   it("ModelHandler get all happy path", (done) => {
@@ -32,8 +33,8 @@ describe("ModelHandler functional tests", () => {
     });
     app.use("/user", [ModelHandler(modelService), finalHandler]);
 
-    FuncTestHelper({
-      app,
+    FuncTestHelper(app, {
+
       url: '/user',
       method: "get"
     }, ({status, data, headers}) => {
@@ -84,8 +85,8 @@ describe("ModelHandler functional tests", () => {
     });
     app.use("/user/:id", [ModelHandler(modelService, logger), finalHandler]);
 
-    FuncTestHelper({
-      app,
+    FuncTestHelper(app, {
+
       url: '/user/' + fakeId,
       method: "get"
     }, ({status, data, headers}) => {
