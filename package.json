@@ -19,9 +19,9 @@
   "author": "claukers",
   "license": "ISC",
   "dependencies": {
-    "@miqro/core": "https://github.com/claukers/miqro-core.git#develop",
-    "@miqro/database": "https://github.com/claukers/miqro-sequelize.git#develop",
-    "@miqro/handlers": "https://github.com/claukers/miqro-express.git#develop"
+    "@miqro/core": "^0.7.11",
+    "@miqro/database": "^0.7.2",
+    "@miqro/handlers": "^0.7.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.7",
