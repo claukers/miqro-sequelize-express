@@ -2,52 +2,34 @@
 
 this modules provides express handlers for exposing sequelize **models**. 
 
+mapping http request to the ``sequelize::Model<T, T>`` corresponding findbyPK, findALl, findAllAndCount, create, createBulk, update, updateBulk and delete. 
+
 ```javascript
-const {
-  Util
-} = require("@miqro/core");
-const {
-  Database,
-  ModelService
-} = require("@miqro/database");
-const {
-  ResponseHandler
-} = require("@miqro/handlers");
-const {
-  ModelHandler
-} = require("@miqro/modelhandlers");
-
-const logger = Util.getLogger("posts.js");
-const db = Database.getInstance();
-
-module.exports = async (app) => {
-  /*
-  * GET /post/
-  * GET /post/:id
-  * PATCH /post/:id
-  * POST /post/
-  */
-  app.use("/post/:id?", [
-    ModelHandler(new ModelService(db.models.post), logger), 
-    ResponseHandler(logger)
-  ]);
-  return app;
-};
+...
+/*
+* GET /post/
+* GET /post/:id
+* PATCH /post/:id
+* POST /post/
+*/
+app.use("/post/:id?", [
+  ModelHandler(new ModelService(new Database().models.post)), 
+  ResponseHandler()
+]);
+...
+app.use(ErrorHandler()); // this will catch some sequelize errors and return a http response
+...
 ```
 
-##### get query params
+##### [OPTIONAL] query params
 
 - req.query.pagination
-
-    TODO
 
     ```json
     ?pagination=...
     ```
 
 - req.query.pagination.search
-
-    TODO
 
     ```json
     ?pagination={..."search": {...},...}
@@ -70,10 +52,9 @@ app.use(.., [
     MapModelHandler((value, index, array, req) => {
         return {
             ... 
-        } // every result from the ModelHandler will be mapped by this
+        } // every result from the ModelHandler will be mapped to this even if result is paginated
     }),
     ResponseHandler(...) 
 ]);
-
 ...
 ```
