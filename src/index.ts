@@ -2,7 +2,7 @@ import {Logger, MethodNotImplementedError} from "@miqro/core";
 import {ModelServiceArgs, ModelServiceInterface} from "@miqro/database";
 import {AsyncNextCallback, getResults, Handler, NextCallback, setResults} from "@miqro/handlers";
 
-export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any, logger?: Logger): AsyncNextCallback => {
+export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any): AsyncNextCallback => {
   return async (req, res, next) => {
     const results = getResults(req);
     if (results) {
