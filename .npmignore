@@ -12,3 +12,4 @@ test/
 tsconfig.json
 .editorconfig
 .nycrc
+.github/
