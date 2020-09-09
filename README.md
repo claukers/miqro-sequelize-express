@@ -1,6 +1,6 @@
 # @miqro/modelhandlers
 
-this modules provides express handlers for exposing sequelize **models**. 
+this module provides express handlers for exposing sequelize **models**. 
 
 mapping http request to the ``sequelize::Model<T, T>`` corresponding findbyPK, findALl, findAllAndCount, create, createBulk, update, updateBulk and delete. 
 

@@ -19,17 +19,17 @@
   "author": "claukers",
   "license": "ISC",
   "dependencies": {
-    "@miqro/core": "^0.8.2",
-    "@miqro/database": "^0.8.1",
-    "@miqro/handlers": "^0.8.1"
+    "@miqro/core": "^0.8.3",
+    "@miqro/database": "^0.8.4",
+    "@miqro/handlers": "^0.8.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.8",
     "@types/mocha": "^8.0.3",
-    "@types/node": "^14.6.3",
+    "@types/node": "^14.6.4",
     "@types/validator": "^13.1.0",
-    "@typescript-eslint/eslint-plugin": "^4.0.1",
-    "@typescript-eslint/parser": "^4.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
     "eslint": "^7.8.1",
     "express": "^4.17.1",
     "mocha": "^8.1.3",
