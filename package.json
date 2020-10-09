@@ -19,9 +19,9 @@
   "author": "claukers",
   "license": "ISC",
   "dependencies": {
-    "@miqro/core": "^0.8.15",
+    "@miqro/core": "^0.8.16",
     "@miqro/database": "^0.8.17",
-    "@miqro/handlers": "^0.8.8"
+    "@miqro/handlers": "^0.8.9"
   },
   "devDependencies": {
     "@types/express": "^4.17.8",
