@@ -4,7 +4,8 @@ import {strictEqual} from "assert";
 import {fake} from "@miqro/core";
 import {TestHelper as FuncTestHelper} from "@miqro/handlers";
 
-describe("ModelHandler functional tests", () => {
+describe("ModelHandler functional tests", function(){
+  this.timeout(10000);
   it("ModelHandler get all happy path", (done) => {
     const {ModelHandler} = require("../src/");
 
