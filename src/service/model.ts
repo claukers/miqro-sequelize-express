@@ -1,6 +1,6 @@
 import {ParseOption, Session, SimpleMap, SimpleTypes} from "@miqro/core";
 
-import {Model, Transaction, ModelCtor, WhereOptions} from "sequelize";
+import {Model, ModelCtor, Transaction, WhereOptions} from "sequelize";
 
 export interface ModelServiceArgs {
   body: SimpleMap<SimpleTypes>;
@@ -63,12 +63,12 @@ export interface ModelServiceOptions {
 
 // ?group=name&group=bla
 export const groupParseOption: ParseOption = {
-  name: "group", type: "array", arrayType: "string", required: false
+  name: "group", type: "array", arrayType: "string", arrayMinLength: 1, required: false
 };
 
 // ?attributes=id&attributes=sum,amount,total
 export const attributesParseOption: ParseOption = {
-  name: "attributes", type: "array", required: false
+  name: "attributes", type: "array", arrayType: "string", arrayMinLength: 1, required: false
 };
 
 // ?limit=10&offset=0
