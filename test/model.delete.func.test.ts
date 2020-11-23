@@ -4,21 +4,21 @@ import {describe, it} from "mocha";
 
 import {Util} from "@miqro/core";
 import {strictEqual} from "assert";
-import {Database} from "@miqro/database";
 
 process.env.NODE_ENV = "test";
 process.env.MIQRO_DIRNAME = resolve(__dirname, "data");
 process.chdir(process.env.MIQRO_DIRNAME);
 Util.loadConfig();
 
+const models = require(resolve(__dirname, "data", "db", "models"));
+
 describe("ModelService Func Tests", function () {
   this.timeout(100000);
 
   it("happy path fake deletelist", (done) => {
     (async () => {
-      const db = new Database();
-      const fakeD = new FakeDeleteModelService(db.models.post);
-      const all = new ModelService(db.models.post);
+      const fakeD = new FakeDeleteModelService(models.post);
+      const all = new ModelService(models.post);
 
       const total = await all.get({
         params: {

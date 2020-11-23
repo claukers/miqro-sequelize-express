@@ -3,20 +3,19 @@ import {strictEqual} from "assert";
 import {describe, it} from "mocha";
 import {resolve} from "path";
 import {FakeDeleteModelService, ModelService} from "../src";
-import {Database} from "@miqro/database";
-
 
 process.env.NODE_ENV = "test";
 process.env.MIQRO_DIRNAME = resolve(__dirname, "data");
 process.chdir(process.env.MIQRO_DIRNAME);
 Util.loadConfig();
 
+const models = require(resolve(__dirname, "data", "db", "models"));
+
 describe("ModelService Func Tests", function () {
   this.timeout(100000);
   it("case 1 get with pagination and order  but no params 1 with getDB", (done) => {
     (async () => {
-      const db = new Database();
-      const service = new ModelService(db.models.post);
+      const service = new ModelService(models.post);
       const result = await service.get({
         params: {},
         query: {
@@ -38,8 +37,7 @@ describe("ModelService Func Tests", function () {
 
   it("case 1 get sum group by name with pagination", (done) => {
     (async () => {
-      const db = new Database();
-      const service = new ModelService(db.models.post);
+      const service = new ModelService(models.post);
       const result = await service.get({
         params: {},
         query: {
@@ -69,8 +67,7 @@ describe("ModelService Func Tests", function () {
 
   it("case 1 get sum group by name", (done) => {
     (async () => {
-      const db = new Database();
-      const service = new ModelService(db.models.post);
+      const service = new ModelService(models.post);
       const result = await service.get({
         params: {},
         query: {
@@ -94,8 +91,7 @@ describe("ModelService Func Tests", function () {
 
   it("case 1 get sum", (done) => {
     (async () => {
-      const db = new Database();
-      const service = new ModelService(db.models.post);
+      const service = new ModelService(models.post);
       const result = await service.get({
         params: {},
         query: {
@@ -116,8 +112,7 @@ describe("ModelService Func Tests", function () {
 
   it("deleted happy path", (done) => {
     (async () => {
-      const db = new Database();
-      const service = new FakeDeleteModelService(db.models.post2);
+      const service = new FakeDeleteModelService(models.post2);
       const result = await service.get({
         params: {},
         query: {
@@ -139,8 +134,7 @@ describe("ModelService Func Tests", function () {
 
   it("case 1 get with pagination and order  but no params 1", (done) => {
     (async () => {
-      const db = new Database();
-      const service = new ModelService(db.models.post);
+      const service = new ModelService(models.post);
       const result = await service.get({
         params: {},
         query: {
@@ -162,8 +156,7 @@ describe("ModelService Func Tests", function () {
 
   it("case 2 get with pagination and order and params 1", (done) => {
     (async () => {
-      const db = new Database();
-      const service = new ModelService(db.models.post);
+      const service = new ModelService(models.post);
       const result = await service.get({
         params: {
           name: "user2"
@@ -186,8 +179,7 @@ describe("ModelService Func Tests", function () {
 
   it("case 2 get with pagination and order and params 1 and search query", (done) => {
     (async () => {
-      const db = new Database();
-      const service = new ModelService(db.models.post);
+      const service = new ModelService(models.post);
       const result = await service.get({
         params: {
           name: "user2"
@@ -212,8 +204,7 @@ describe("ModelService Func Tests", function () {
 
   it("case 2 get with pagination and order and params 2", (done) => {
     (async () => {
-      const db = new Database();
-      const service = new ModelService(db.models.post);
+      const service = new ModelService(models.post);
       const result = await service.get({
         params: {
           email: "email1"

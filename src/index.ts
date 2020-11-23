@@ -1,5 +1,5 @@
-import { Logger, MethodNotImplementedError } from "@miqro/core";
-import { AsyncNextCallback, getResults, Handler, NextCallback, setResults } from "@miqro/handlers";
+import {Logger, MethodNotImplementedError} from "@miqro/core";
+import {AsyncNextCallback, getResults, Handler, NextCallback, setResults} from "@miqro/handlers";
 import {ModelServiceArgs, ModelServiceInterface} from "./service";
 
 export * from "./audit";

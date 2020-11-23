@@ -173,11 +173,10 @@ export class ModelService<T = any> extends AbstractModelService<T> {
       (patch as any) instanceof Array) {
       throw new ParseOptionsError(`patch not object`);
     }
-    const ret = await this.model.update(body as unknown as Partial<T>, {
+    const [rowCount] = await this.model.update(body as unknown as Partial<T>, {
       where: params as WhereOptions,
       transaction
     });
-    const [rowCount] = ret;
     return rowCount;
   }
 
