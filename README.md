@@ -9,7 +9,7 @@ mapping http request to the ``Sequelize.ModelCtor<Model<...>>`` corresponding fi
 
 ```javascript
 ...
-const postService = new ModelService(models.post, options);
+const postService = new ModelService(models.post, ...);
 ...
 app.get("/post/:id?", [ // all req.params like the optional :id in this example will be mapped as a WhereOptions from sequelize.
   ModelHandler(postService), 
