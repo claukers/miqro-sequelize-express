@@ -1,7 +1,7 @@
 import {getLogger, Logger, StopWatch} from "@miqro/core";
 import {CatchHandler, ErrorCallback, NextCallback} from "@miqro/handlers";
 import {Request, Response} from "express";
-import {ModelCtor, Model, Sequelize, DataTypes} from "sequelize";
+import {Transaction, ModelCtor, Model, Sequelize, DataTypes} from "sequelize";
 
 const AuditModel = (auditModelName: string, sequelize: Sequelize): ModelCtor<Model<any>> => {
   return sequelize.define(auditModelName, {
@@ -26,7 +26,7 @@ const AuditModel = (auditModelName: string, sequelize: Sequelize): ModelCtor<Mod
   }, {});
 }
 
-const auditLog = async (auditModel: ModelCtor<Model<any>>, req: Request, res?: Response, e?: Error | string, originalRequest?: any, transaction?: any): Promise<void> => {
+const auditLog = async (auditModel: ModelCtor<Model<any>>, req: Request, res?: Response, e?: Error | string, originalRequest?: any, transaction?: Transaction): Promise<void> => {
   await auditModel.create({
     originalReq: originalRequest,
     headers: req ? req.headers : undefined,
@@ -92,7 +92,7 @@ export const AuditHandler = (auditModelName = "audit", sequelize: Sequelize, log
       }
     });
     next();
-  }, logger as any);
+  }, logger);
 }
 
 export const AuditErrorHandler = (logger: Logger): ErrorCallback =>

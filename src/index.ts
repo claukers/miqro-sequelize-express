@@ -1,4 +1,11 @@
-import {ConfigFileNotFoundError, ConfigPathResolver, Logger, MethodNotImplementedError, SimpleMap} from "@miqro/core";
+import {
+  ConfigFileNotFoundError,
+  ConfigPathResolver,
+  getLogger,
+  Logger,
+  MethodNotImplementedError,
+  SimpleMap
+} from "@miqro/core";
 import {AsyncNextCallback, getResults, Handler, NextCallback, setResults} from "@miqro/handlers";
 import {ModelServiceArgs, ModelServiceInterface} from "./service";
 import {Model, ModelCtor} from "sequelize";
@@ -58,6 +65,7 @@ export const MapModelHandler = (callbackfn: (value: any, index: number, array: a
 };
 
 export const ModelHandler = (service: ModelServiceInterface, logger?: Logger): NextCallback => {
+  logger = logger ? logger : getLogger("ModelHandler");
   return Handler(async (req) => {
     switch (req.method.toUpperCase()) {
       case "GET":
@@ -73,5 +81,5 @@ export const ModelHandler = (service: ModelServiceInterface, logger?: Logger): N
       default:
         throw new MethodNotImplementedError(`${req.method}`);
     }
-  }, logger as any);
+  }, logger);
 };
