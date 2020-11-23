@@ -11,6 +11,7 @@
     "prepare": "npm run build",
     "prebuild": "rm -Rf dist;",
     "build": "tsc",
+    "pretest": "rm test/data/test.sqlite3; cd test/data && NODE_ENV=test npx @miqro/database migrate && NODE_ENV=test npx @miqro/database seed",
     "test": "NODE_ENV=test nyc mocha test/*.test.ts",
     "testfile": "NODE_ENV=test nyc mocha",
     "lint": "eslint ./src --ext ts",
@@ -19,11 +20,11 @@
   "author": "claukers",
   "license": "ISC",
   "dependencies": {
-    "@miqro/core": "^0.8.29",
-    "@miqro/database": "^0.8.21",
+    "@miqro/core": "https://github.com/claukers/miqro-core.git#develop",
     "@miqro/handlers": "^0.8.20"
   },
   "devDependencies": {
+    "@miqro/database": "^0.8.22",
     "@types/express": "^4.17.9",
     "@types/mocha": "^8.0.4",
     "@types/node": "^14.14.8",
@@ -34,6 +35,8 @@
     "express": "^4.17.1",
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
+    "sequelize-cli": "^6.2.0",
+    "sqlite3": "^5.0.0",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5"
   },

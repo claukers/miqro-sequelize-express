@@ -16,7 +16,18 @@ const db = new Database();
 * DELETE /post/:id
 */
 app.use("/post/:id?", [ // all req.params like the optional :id in this example will be mapped as a WhereOptions from sequelize.
-  ModelHandler(new ModelService(db.models.post, ...), ...), 
+  ModelHandler(new ModelService(db.models.post, {
+    enableMultiInstanceDelete: false, // enable multi instance destroy
+    enableMultiInstancePatch: false, // enable multi instance update
+    disableAttributesQuery: false, // disable req.query.attributes
+    include: {
+        ...
+    },
+    disableOrderQuery: false, // disable req.query.order
+    disableGroupQuery: false, // disable req.query.group
+    disablePaginationQuery: false, // disable req.query.limit and req.query.offset
+    disableSearchQuery: false // disable req.query.q and req.query.columns
+  }), ...), 
   ResponseHandler(...)
 ]);
 ...
@@ -26,25 +37,35 @@ app.use(ErrorHandler(...)); // this will catch some sequelize errors and return 
 
 ##### [OPTIONAL] query params
 
-- req.query.pagination
+###### pagination
 
-    ```json
-    ?pagination={"limit": ..., "offset": ..., ...}
-    ```
+```
+?limit=10&offset=0
+```
 
-- req.query.pagination.search
+###### search by like
 
-    ```json
-    ?pagination={..."search": {"query": ..., "columns": [...], ...}, ...}
-    ```
+```
+?columns=name&columns=age&q=text
+```
 
-- req.query.include
+###### order
 
-    this is used as the **include** argument in **sequelize::model::findAll**, **sequelize::model::findByPk** and .... 
+```
+?order=name,DESC&order=age,ASC
+```
 
-    ```json
-    ?include=[{"model": ..., "required": ..., "attributes": [...], "where": {...}, ...}]
-    ```
+###### group by
+
+```
+?group=name&group=age
+```
+
+###### attributes
+
+```
+?attributes=id&attributes=sum,amount,total
+```
 
 ##### MapModelHandler(...)
 

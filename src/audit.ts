@@ -1,10 +1,9 @@
-import { getLogger, Logger, StopWatch } from "@miqro/core";
-import { Database } from "@miqro/database";
+import { Database, getLogger, Logger, StopWatch } from "@miqro/core";
 import { CatchHandler, ErrorCallback, NextCallback } from "@miqro/handlers";
 import { Request, Response } from "express";
-import { DataTypes, ModelCtor, Transaction } from "sequelize";
+import {ModelDAO} from "./service";
 
-const AuditModel = (auditModelName: string, sequelize: any) => {
+const AuditModel = (auditModelName: string, sequelize: any, DataTypes: any) => {
   return sequelize.define(auditModelName, {
     originalReq: DataTypes.JSON,
     headers: DataTypes.JSON,
@@ -27,7 +26,7 @@ const AuditModel = (auditModelName: string, sequelize: any) => {
   }, {});
 }
 
-const auditLog = async (auditModel: ModelCtor<any>, req: Request, res?: Response, e?: Error | string, originalRequest?: any, transaction?: Transaction): Promise<void> => {
+const auditLog = async (auditModel: ModelDAO, req: Request, res?: Response, e?: Error | string, originalRequest?: any, transaction?: any): Promise<void> => {
   await auditModel.create({
     originalReq: originalRequest,
     headers: req ? req.headers : undefined,
@@ -56,7 +55,7 @@ const auditLog = async (auditModel: ModelCtor<any>, req: Request, res?: Response
 
 export const AuditHandler = (auditModelName = "audit", db = Database.getInstance(), logger?: Logger): NextCallback => {
   logger = logger ? logger : getLogger("AuditHandler");
-  const auditModel = AuditModel(auditModelName, db.sequelize);
+  const auditModel = AuditModel(auditModelName, db.sequelize, db.Sequelize.DataTypes);
   db.models[auditModelName] = auditModel;
   return CatchHandler(async (req, res, next) => {
     await db.models[auditModelName].sync({
@@ -94,7 +93,7 @@ export const AuditHandler = (auditModelName = "audit", db = Database.getInstance
       }
     });
     next();
-  }, logger);
+  }, logger as any);
 }
 
 export const AuditErrorHandler = (logger: Logger): ErrorCallback =>
