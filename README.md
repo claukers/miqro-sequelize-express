@@ -1,36 +1,37 @@
 # @miqro/modelhandlers
 
-this module provides express handlers for exposing sequelize **models**. 
+this module provides express handlers for exposing **sequelize** models. 
 
-mapping http request to the ``sequelize::Model<T, T>`` corresponding findbyPK, findALl, findAllAndCount, create, createBulk, update, updateBulk and delete. 
+mapping http request to the ``Sequelize.ModelCtor<Model<...>>`` corresponding findbyPK, findALl, findAllAndCount, create, createBulk, update and delete.
+
+
+##### ModelHandler(model, [options])
 
 ```javascript
 ...
-const db = new Database();
+const postService = new ModelService(models.post, options);
 ...
-/*
-* GET /post/
-* GET /post/:id
-* PATCH /post/:id
-* POST /post/
-* DELETE /post/:id
-*/
-app.use("/post/:id?", [ // all req.params like the optional :id in this example will be mapped as a WhereOptions from sequelize.
-  ModelHandler(new ModelService(db.models.post, {
-    disableAttributesQuery: false, // disable req.query.attributes
-    include: {
-        ...
-    },
-    disableOrderQuery: false, // disable req.query.order
-    disableGroupQuery: false, // disable req.query.group
-    disablePaginationQuery: false, // disable req.query.limit and req.query.offset
-    disableSearchQuery: false // disable req.query.q and req.query.columns
-  }), ...), 
+app.get("/post/:id?", [ // all req.params like the optional :id in this example will be mapped as a WhereOptions from sequelize.
+  ModelHandler(postService), 
   ResponseHandler(...)
 ]);
 ...
 app.use(ErrorHandler(...)); // this will catch some sequelize errors and return an appropiate http response
 ...
+```
+
+###### options
+```javascript
+{
+disableAttributesQuery: false, // disable req.query.attributes
+include: {
+...
+},
+disableOrderQuery: false, // disable req.query.order
+disableGroupQuery: false, // disable req.query.group
+disablePaginationQuery: false, // disable req.query.limit and req.query.offset
+disableSearchQuery: false // disable req.query.q and req.query.columns
+}
 ```
 
 ##### [OPTIONAL] query params
