@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     text: DataTypes.STRING,
     amount: DataTypes.INTEGER,
+    deleted: DataTypes.BOOLEAN,
     bla28: {
       type: DataTypes.STRING,
       allowNull: true

@@ -17,8 +17,6 @@ const db = new Database();
 */
 app.use("/post/:id?", [ // all req.params like the optional :id in this example will be mapped as a WhereOptions from sequelize.
   ModelHandler(new ModelService(db.models.post, {
-    enableMultiInstanceDelete: false, // enable multi instance destroy
-    enableMultiInstancePatch: false, // enable multi instance update
     disableAttributesQuery: false, // disable req.query.attributes
     include: {
         ...

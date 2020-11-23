@@ -1,49 +1,75 @@
 import {FakeDeleteModelService} from "./deleted";
-import {ModelGetResult, ModelPatchResult, ModelPostResult, ModelServiceArgs} from "./model";
-import {ParseOptionsError} from "@miqro/core";
+import {Transaction} from "sequelize";
+import {ModelServiceArgs, ModelServiceGetResult, ModelServicePatchResult, ModelServicePostResult} from "./model";
+import {parseOptions, ParseOptionsError, Session} from "@miqro/core";
 
 
-export class AccountModelService extends FakeDeleteModelService {
-  public async get(args: ModelServiceArgs, transaction?: any, skipLocked?: boolean): Promise<ModelGetResult> {
+export class AccountModelService<T = any> extends FakeDeleteModelService<T> {
+
+  protected modelAccountAttribute = "account";
+
+  public async get(args: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T>> {
+    parseOptions("body", args.body, [], "no_extra");
     if (!args.session) {
       throw new ParseOptionsError("req.session not valid");
     }
-    args.params.account = args.session.account;
+    if (args.params[this.modelAccountAttribute] !== undefined) {
+      throw new ParseOptionsError(`not valid params.${this.modelAccountAttribute}`);
+    }
+    args.params[this.modelAccountAttribute] = args.session.account;
     return super.get(args, transaction, skipLocked);
   }
 
-  public post(args: ModelServiceArgs, transaction?: any): Promise<ModelPostResult> {
+  public post(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T>> {
+    parseOptions("params", args.params, [], "no_extra");
+    parseOptions("query", args.query, [], "no_extra");
+    if (!args.session) {
+      throw new ParseOptionsError("req.session not valid");
+    }
     if (args.body instanceof Array) {
       args.body = args.body.map(body => {
-        if (!args.session) {
-          throw new ParseOptionsError("req.session not valid");
+        if (body[this.modelAccountAttribute] !== undefined) {
+          throw new ParseOptionsError(`not valid body[...].${this.modelAccountAttribute}`);
         }
-        body.account = args.session.account;
+        body[this.modelAccountAttribute] = (args.session as Session).account;
         return body;
       }) as any;
     } else {
-      if (!args.session) {
-        throw new ParseOptionsError("req.session not valid");
+      if (args.body[this.modelAccountAttribute] !== undefined) {
+        throw new ParseOptionsError(`not valid body.${this.modelAccountAttribute}`);
       }
-      args.body.account = args.session.account;
+      args.body[this.modelAccountAttribute] = args.session.account;
     }
     return super.post(args, transaction);
   }
 
-  public patch(args: ModelServiceArgs, transaction?: any): Promise<ModelPatchResult> {
+  public patch(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult<T>> {
+    parseOptions("query", args.query, [], "no_extra");
     if (!args.session) {
       throw new ParseOptionsError("req.session not valid");
     }
-    args.params.account = args.session.account;
-    args.body.account = args.session.account;
+    if (args.params[this.modelAccountAttribute] !== undefined) {
+      throw new ParseOptionsError(`not valid params.${this.modelAccountAttribute}`);
+    }
+    if (args.body[this.modelAccountAttribute] !== undefined) {
+      throw new ParseOptionsError(`not valid body.${this.modelAccountAttribute}`);
+    }
+
+    args.params[this.modelAccountAttribute] = args.session.account;
+    args.body[this.modelAccountAttribute] = args.session.account;
     return super.patch(args, transaction);
   }
 
-  public delete(args: ModelServiceArgs, transaction?: any): Promise<ModelPatchResult> {
+  public delete(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult<T>> {
+    parseOptions("query", args.query, [], "no_extra");
+    parseOptions("body", args.body, [], "no_extra");
     if (!args.session) {
       throw new ParseOptionsError("req.session not valid");
     }
-    args.params.account = args.session.account;
+    if (args.params[this.modelAccountAttribute] !== undefined) {
+      throw new ParseOptionsError(`not valid params.${this.modelAccountAttribute}`);
+    }
+    args.params[this.modelAccountAttribute] = args.session.account;
     return super.delete(args, transaction);
   }
 }

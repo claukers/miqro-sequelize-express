@@ -1,5 +1,7 @@
 import {ParseOption, Session, SimpleMap, SimpleTypes} from "@miqro/core";
 
+import {Model, Transaction, ModelCtor, WhereOptions} from "sequelize";
+
 export interface ModelServiceArgs {
   body: SimpleMap<SimpleTypes>;
   query: SimpleMap<SimpleTypes>;
@@ -7,98 +9,50 @@ export interface ModelServiceArgs {
   session?: Session;
 }
 
-export interface ModelDAOInstance<T = any> {
-  dataValues: T;
+export type ModelServiceGetResult<T = any> =
+  Model<T>[]
+  | { rows: Model<T>[]; count: number | { name: string; count: number; }[] };
 
-  update(patch: any, options?: { transaction: any; }): Promise<ModelDAOInstance>;
+export type ModelServicePostResult<T = any> = Model<T> | Model<T>[];
 
-  destroy(options?: { transaction: any; }): Promise<ModelDAOInstance>;
+export type ModelServicePatchResult<T = any> = number;
+
+export type ModelServiceDeleteResult = number;
+
+export interface ModelServiceInterface<T = any> {
+  get(options: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T>>;
+
+  post(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T>>;
+
+  put(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T>>;
+
+  patch(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult<T>>;
+
+  delete(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServiceDeleteResult | ModelServicePatchResult<T>>;
 }
 
-export type ModelDAOFindAndCountAllResult<T=any> = { rows: ModelDAOInstance<T>[]; count: number | { name: string; count: number; }[] };
-
-export type ModelDAOFindAllResult<T=any> = ModelDAOInstance<T>[];
-
-export type ModelGetResult =
-  ModelDAOFindAllResult
-  | ModelDAOFindAndCountAllResult;
-
-export type ModelPostResult = any | any[];
-
-export type ModelPatchResult = any | any[] | null;
-
-export type ModelDeleteResult = void | void[] | null;
-
-export interface ModelServiceInterface {
-  get(options: ModelServiceArgs, transaction?: any, skipLocked?: boolean): Promise<any>;
-
-  post(options: ModelServiceArgs, transaction?: any): Promise<any>;
-
-  put(options: ModelServiceArgs, transaction?: any): Promise<any>;
-
-  patch(options: ModelServiceArgs, transaction?: any): Promise<any>;
-
-  delete(options: ModelServiceArgs, transaction?: any): Promise<any>;
-}
-
-export interface ModelDAO<T=any> {
-  findAndCountAll(args: {
-    attributes?: any;
-    where?: any;
-    order?: any[][];
-    include?: ModelServiceInclude;
-    limit: number;
-    offset: number;
-    group?: string[];
-    transaction?: any;
-    lock?: boolean;
-    skipLocked?: boolean;
-  }): Promise<ModelDAOFindAndCountAllResult<T>>;
-
-  findAll(args: {
-    attributes?: any;
-    where: any;
-    order?: any[][];
-    include?: ModelServiceInclude;
-    group?: string[];
-    transaction?: any;
-    lock?: boolean;
-    skipLocked?: boolean;
-  }): Promise<ModelDAOFindAllResult<T>>;
-
-  create(args: any, options?: {
-    transaction: any;
-  }): Promise<ModelDAOInstance<T>>;
-
-  bulkCreate(args: any[], options?: {
-    transaction: any;
-  }): Promise<ModelDAOInstance<T>[]>;
-}
-
-export type ModelServiceInclude = {
-  model: any;
+export type ModelServiceInclude<T = any> = {
+  model: ModelCtor<Model<T>>;
   required?: boolean;
-  where?: any,
+  where?: WhereOptions,
   include?: {
-    model: any;
+    model: ModelCtor<Model<T>>;
     required?: boolean;
-    where?: any,
+    where?: WhereOptions,
     include?: {
-      model: any;
+      model: ModelCtor<Model<T>>;
       required?: boolean;
-      where?: any,
+      where?: WhereOptions,
       include?: {
-        model: any;
+        model: ModelCtor<Model<T>>;
         required?: boolean;
-        where?: any
+        where?: WhereOptions
       }[]
     }[]
   }[]
 }[];
 
 export interface ModelServiceOptions {
-  enableMultiInstanceDelete?: boolean;
-  enableMultiInstancePatch?: boolean;
   disableAttributesQuery?: boolean;
   include?: ModelServiceInclude;
   disableOrderQuery?: boolean;

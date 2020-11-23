@@ -1,8 +1,9 @@
-import {Database, Util} from "@miqro/core";
+import {Util} from "@miqro/core";
 import {strictEqual} from "assert";
 import {describe, it} from "mocha";
 import {resolve} from "path";
 import {FakeDeleteModelService, ModelService} from "../src";
+import {Database} from "@miqro/database";
 
 
 process.env.NODE_ENV = "test";

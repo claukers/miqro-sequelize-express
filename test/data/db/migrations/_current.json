@@ -26,6 +26,10 @@
                     "field": "amount",
                     "seqType": "Sequelize.INTEGER"
                 },
+                "deleted": {
+                    "field": "deleted",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
                 "bla28": {
                     "allowNull": true,
                     "field": "bla28",
@@ -99,5 +103,5 @@
             "indexes": []
         }
     },
-    "revision": 6
+    "revision": 7
 }

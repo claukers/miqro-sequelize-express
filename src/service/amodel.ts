@@ -1,37 +1,37 @@
 import {
-  ModelDeleteResult,
-  ModelGetResult,
-  ModelPatchResult,
-  ModelPostResult,
+  ModelServiceDeleteResult,
+  ModelServiceGetResult,
+  ModelServicePatchResult,
+  ModelServicePostResult,
   ModelServiceArgs,
   ModelServiceInterface
 } from "./model";
 import {MethodNotImplementedError} from "@miqro/core";
 
-export abstract class AbstractModelService implements ModelServiceInterface {
+export abstract class AbstractModelService<T = any> implements ModelServiceInterface<T> {
   // noinspection JSUnusedLocalSymbols
   /* eslint-disable  @typescript-eslint/no-unused-vars */
-  public async get(options: ModelServiceArgs): Promise<ModelGetResult> {
+  public async get(options: ModelServiceArgs): Promise<ModelServiceGetResult<T>> {
     throw new MethodNotImplementedError("Method not implemented.");
   }
 
   // noinspection JSUnusedLocalSymbols
-  public async post(options: ModelServiceArgs): Promise<ModelPostResult> {
+  public async post(options: ModelServiceArgs): Promise<ModelServicePostResult<T>> {
     throw new MethodNotImplementedError("Method not implemented.");
   }
 
   // noinspection JSUnusedLocalSymbols
-  public async put(options: ModelServiceArgs): Promise<ModelPostResult> {
+  public async put(options: ModelServiceArgs): Promise<ModelServicePostResult<T>> {
     throw new MethodNotImplementedError("Method not implemented.");
   }
 
   // noinspection JSUnusedLocalSymbols
-  public async patch(options: ModelServiceArgs): Promise<ModelPatchResult> {
+  public async patch(options: ModelServiceArgs): Promise<ModelServicePatchResult<T>> {
     throw new MethodNotImplementedError("Method not implemented.");
   }
 
   // noinspection JSUnusedLocalSymbols
-  public async delete(options: ModelServiceArgs): Promise<ModelDeleteResult> {
+  public async delete(options: ModelServiceArgs): Promise<ModelServiceDeleteResult | ModelServicePatchResult<T>> {
     throw new MethodNotImplementedError("Method not implemented.");
   }
 }

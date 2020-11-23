@@ -2,11 +2,10 @@ import {AbstractModelService} from "./amodel";
 import {
   attributesParseOption,
   groupParseOption,
-  ModelDAO,
-  ModelDeleteResult,
-  ModelGetResult,
-  ModelPatchResult,
-  ModelPostResult,
+  ModelServiceDeleteResult,
+  ModelServiceGetResult,
+  ModelServicePatchResult,
+  ModelServicePostResult,
   ModelServiceArgs,
   ModelServiceOptions,
   orderParseOption,
@@ -14,13 +13,22 @@ import {
   searchParseOption
 } from "./model";
 
-import {ParseOption, parseOptions, ParseOptionsError, Database} from "@miqro/core";
+import {
+  Model,
+  ModelCtor,
+  WhereOptions,
+  col as SequelizeCol,
+  fn as SequelizeFn,
+  Op as SequelizeOp,
+  Transaction
+} from "sequelize";
 
-export class ModelService extends AbstractModelService {
+import {ParseOption, parseOptions, ParseOptionsError} from "@miqro/core";
+
+export class ModelService<T = any> extends AbstractModelService<T> {
   protected getQueryParseOptions: ParseOption[];
 
-  /* eslint-disable  @typescript-eslint/explicit-module-boundary-types */
-  constructor(protected model: ModelDAO, protected options?: ModelServiceOptions, protected db = Database.getInstance()) {
+  constructor(protected model: ModelCtor<Model<T>>, protected options?: ModelServiceOptions) {
     super();
 
     this.getQueryParseOptions = [];
@@ -49,7 +57,7 @@ export class ModelService extends AbstractModelService {
     }
   }
 
-  public async get({body, query, params}: ModelServiceArgs, transaction?: any, skipLocked?: boolean): Promise<ModelGetResult> {
+  public async get({body, query, params}: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T>> {
     parseOptions("body", body, [], "no_extra");
     const {limit, offset, columns, q, order, attributes, group} = parseOptions("query", query, this.getQueryParseOptions, "no_extra");
     if (offset !== undefined && limit === undefined) {
@@ -81,7 +89,7 @@ export class ModelService extends AbstractModelService {
           ], "no_extra");
 
           try {
-            (attributes as any[])[i] = [this.db.Sequelize.fn(fnName, this.db.Sequelize.col(col as string)), name as string];
+            (attributes as any[])[i] = [SequelizeFn(fnName, SequelizeCol(col as string)), name as string];
           } catch (e) {
             throw new ParseOptionsError(`bad query.attributes [${attribute}]`);
           }
@@ -101,12 +109,12 @@ export class ModelService extends AbstractModelService {
       const searchParams: any = {};
       for (const column of (columns as string[])) {
         searchParams[column] = {
-          [this.db.Sequelize.Op.like]: "%" + q + "%"
+          [SequelizeOp.like]: "%" + q + "%"
         };
       }
       params = {
-        [this.db.Sequelize.Op.and]: params,
-        [this.db.Sequelize.Op.or]: searchParams
+        [SequelizeOp.and]: params,
+        [SequelizeOp.or]: searchParams
       } as any;
     }
 
@@ -131,7 +139,7 @@ export class ModelService extends AbstractModelService {
       group: group as string[],
     })) : (transaction ? this.model.findAll({
       attributes: attributes as any,
-      where: params as any,
+      where: params as WhereOptions,
       order: order as any,
       include: this.options && this.options.include ? this.options.include : undefined,
       group: group as string[],
@@ -147,15 +155,17 @@ export class ModelService extends AbstractModelService {
     }))
   }
 
-  public async post({body, query, params}: ModelServiceArgs, transaction?: any): Promise<ModelPostResult> {
+  public async post({body, query, params}: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T>> {
     parseOptions("params", params, [], "no_extra");
     parseOptions("query", query, [], "no_extra");
-    // noinspection JSDeprecatedSymbols
-    return this.model.create(body as any, transaction ? {transaction} : undefined);
+    if (body instanceof Array) {
+      return this.model.bulkCreate(body, transaction ? {transaction} : undefined);
+    } else {
+      return this.model.create(body as any, transaction ? {transaction} : undefined);
+    }
   }
 
-  /* eslint-disable  @typescript-eslint/explicit-module-boundary-types */
-  public async patch({body, query, params, session}: ModelServiceArgs, transaction?: any): Promise<ModelPatchResult> {
+  public async patch({body, query, params, session}: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult<T>> {
     parseOptions("query", query, [], "no_extra");
     const patch = parseOptions("body", body, [], "add_extra");
     if (
@@ -163,46 +173,20 @@ export class ModelService extends AbstractModelService {
       (patch as any) instanceof Array) {
       throw new ParseOptionsError(`patch not object`);
     }
-    const result = await this.get({
-      body: {},
-      query,
-      session,
-      params
-    }, transaction);
-    const instances = result instanceof Array ? result : result.rows;
-    if (this.options && this.options.enableMultiInstancePatch && instances.length > 0) {
-      const tR = [];
-      for (const instance of instances) {
-        tR.push(instance.update(body, transaction ? {transaction} : undefined));
-      }
-      return Promise.all(tR);
-    } else if (instances.length === 1) {
-      return instances[0].update(body, transaction ? {transaction} : undefined);
-    } else {
-      return null;
-    }
+    const ret = await this.model.update(body as unknown as Partial<T>, {
+      where: params as WhereOptions,
+      transaction
+    });
+    const [rowCount] = ret;
+    return rowCount;
   }
 
-  public async delete({body, query, params, session}: ModelServiceArgs, transaction?: any): Promise<ModelDeleteResult | ModelPatchResult> {
+  public async delete({body, query, params, session}: ModelServiceArgs, transaction?: Transaction): Promise<ModelServiceDeleteResult | ModelServicePatchResult<T>> {
     parseOptions("query", query, [], "no_extra");
     parseOptions("body", body, [], "no_extra");
-    const result = await this.get({
-      body: {},
-      query,
-      session,
-      params
-    }, transaction);
-    const instances = result instanceof Array ? result : result.rows;
-    if (this.options && this.options.enableMultiInstanceDelete && instances.length > 0) {
-      const tR = [];
-      for (const instance of instances) {
-        tR.push(instance.destroy(transaction ? {transaction} : undefined));
-      }
-      return Promise.all(tR);
-    } else if (instances.length === 1) {
-      return instances[0].destroy(transaction ? {transaction} : undefined);
-    } else {
-      return null;
-    }
+    return this.model.destroy({
+      where: params as WhereOptions,
+      transaction
+    });
   }
 }

@@ -8,6 +8,7 @@ module.exports = {
         email: "email1",
         amount: 10,
         text: "text1",
+        deleted: false,
         createdAt: "2019-1-1 1:1",
         updatedAt: "2019-1-1 1:1"
 
@@ -17,6 +18,7 @@ module.exports = {
         email: "email3",
         amount: 20,
         text: "text3",
+        deleted: false,
         createdAt: "2019-1-1 1:1",
         updatedAt: "2019-1-1 1:1"
 
@@ -26,6 +28,7 @@ module.exports = {
         email: "email2",
         amount: 30,
         text: "text1",
+        deleted: false,
         createdAt: "2019-1-1 1:1",
         updatedAt: "2019-1-1 1:1"
       },
@@ -34,6 +37,7 @@ module.exports = {
         email: "email1",
         amount: 40,
         text: "text2",
+        deleted: false,
         createdAt: "2019-1-1 1:1",
         updatedAt: "2019-1-1 1:1"
       }], {});

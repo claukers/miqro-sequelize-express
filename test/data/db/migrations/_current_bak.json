@@ -22,6 +22,10 @@
                     "field": "text",
                     "seqType": "Sequelize.STRING"
                 },
+                "amount": {
+                    "field": "amount",
+                    "seqType": "Sequelize.INTEGER"
+                },
                 "bla28": {
                     "allowNull": true,
                     "field": "bla28",
@@ -95,5 +99,5 @@
             "indexes": []
         }
     },
-    "revision": 5
+    "revision": 6
 }
