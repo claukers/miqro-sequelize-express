@@ -2,14 +2,14 @@ import {Util} from "@miqro/core";
 import {strictEqual} from "assert";
 import {describe, it} from "mocha";
 import {resolve} from "path";
-import {FakeDeleteModelService, ModelService} from "../src";
+import {FakeDeleteModelService, loadModels, ModelService} from "../src";
 
 process.env.NODE_ENV = "test";
 process.env.MIQRO_DIRNAME = resolve(__dirname, "data");
 process.chdir(process.env.MIQRO_DIRNAME);
 Util.loadConfig();
 
-const models = require(resolve(__dirname, "data", "db", "models"));
+const models = loadModels();
 
 describe("ModelService Func Tests", function () {
   this.timeout(100000);

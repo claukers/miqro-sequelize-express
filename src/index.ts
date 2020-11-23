@@ -1,10 +1,28 @@
-import {Logger, MethodNotImplementedError} from "@miqro/core";
+import {ConfigFileNotFoundError, ConfigPathResolver, Logger, MethodNotImplementedError, SimpleMap} from "@miqro/core";
 import {AsyncNextCallback, getResults, Handler, NextCallback, setResults} from "@miqro/handlers";
 import {ModelServiceArgs, ModelServiceInterface} from "./service";
+import {Model, ModelCtor} from "sequelize";
+import {existsSync} from "fs";
 
 export * from "./audit";
 
 export * from "./service";
+
+export const loadModels = (sequelizercPath = ConfigPathResolver.getSequelizeRCFilePath()): SimpleMap<ModelCtor<Model<any>>> => {
+  if (!existsSync(sequelizercPath)) {
+    // noinspection SpellCheckingInspection
+    throw new ConfigFileNotFoundError(`missing .sequelizerc file. maybe you didnt init your db config.`);
+  } else {
+    // noinspection SpellCheckingInspection
+    /* eslint-disable  @typescript-eslint/no-var-requires */
+    const sequelizerc = require(sequelizercPath);
+    const modelsFolder = sequelizerc["models-path"];
+    if (!existsSync(modelsFolder)) {
+      throw new ConfigFileNotFoundError(`missing .sequelizerc["models-path"]=[${modelsFolder}] file. maybe you didnt init your db config.`);
+    }
+    return require(modelsFolder) as SimpleMap<ModelCtor<Model<any>>>;
+  }
+};
 
 export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any): AsyncNextCallback => {
   return async (req, res, next) => {

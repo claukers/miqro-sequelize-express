@@ -1,5 +1,5 @@
 import {resolve} from "path";
-import {ModelService} from "../src";
+import {loadModels, ModelService} from "../src";
 import {describe, it} from "mocha";
 
 import {Util} from "@miqro/core";
@@ -10,7 +10,7 @@ process.env.MIQRO_DIRNAME = resolve(__dirname, "data");
 process.chdir(process.env.MIQRO_DIRNAME);
 Util.loadConfig();
 
-const models = require(resolve(__dirname, "data", "db", "models"));
+const models = loadModels();
 
 describe("ModelService Func Tests", function () {
   this.timeout(100000);
@@ -27,8 +27,6 @@ describe("ModelService Func Tests", function () {
           bla7: "bla7"
         }
       });
-      console.log(result);
-      console.log(result);
       if (!result) {
         strictEqual(true, false);
       } else {
