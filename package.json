@@ -21,7 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "@miqro/core": "^0.8.31",
-    "@miqro/handlers": "^0.8.20",
+    "@miqro/handlers": "^0.8.21",
     "sequelize": "^6.3.5"
   },
   "devDependencies": {
