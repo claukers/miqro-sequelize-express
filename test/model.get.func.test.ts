@@ -35,17 +35,17 @@ describe("ModelService Func Tests", function () {
     })().then(done).catch(done);
   });
 
-  it("case 1 get sum group by name with pagination", (done) => {
+  it("case 1 get sum group by name with pagination using fixqueryarrays", (done) => {
     (async () => {
       const service = new ModelService(models.post);
       const result = await service.get({
         params: {},
         query: {
           attributes: ["name", "sum,amount,total"],
-          group: ["name"],
+          group: "name",
           limit: 10,
           offset: 1,
-          order: ["name, DESC"]
+          order: "name, DESC"
         },
         body: {}
       });
