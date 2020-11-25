@@ -23,16 +23,9 @@ import {
   Transaction
 } from "sequelize";
 
-import {ParseOption, parseOptions, ParseOptionsError} from "@miqro/core";
+import {parseQueryOptions} from "@miqro/handlers";
 
-const fixQueryArrays = (query: any, queryArgs: any): void => {
-  const arrayNames = queryArgs.filter((q:any) => q.type === "array").map((q:any) => q.name);
-  for (const arrayName of arrayNames) {
-    if (query[arrayName] !== undefined && typeof query[arrayName] === "string") {
-      query[arrayName] = [query[arrayName]] as any;
-    }
-  }
-}
+import {ParseOption, parseOptions, ParseOptionsError} from "@miqro/core";
 
 export class ModelService<T = any> extends AbstractModelService<T> {
   protected getQueryParseOptions: ParseOption[];
@@ -68,8 +61,7 @@ export class ModelService<T = any> extends AbstractModelService<T> {
 
   public async get({body, query, params}: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T>> {
     parseOptions("body", body, [], "no_extra");
-    fixQueryArrays(query, this.getQueryParseOptions);
-    const {limit, offset, columns, q, order, attributes, group} = parseOptions("query", query, this.getQueryParseOptions, "no_extra");
+    const {limit, offset, columns, q, order, attributes, group} = parseQueryOptions("query", query, this.getQueryParseOptions, "no_extra");
     if (offset !== undefined && limit === undefined) {
       throw new ParseOptionsError(`query.limit needed for query.offset`);
     }
