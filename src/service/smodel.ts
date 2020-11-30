@@ -107,7 +107,7 @@ export class ModelService<T = any> extends AbstractModelService<T> {
         }
       }
     }
-    if (q !== undefined && columns !== undefined) {
+    if (q !== undefined && columns !== undefined && q !== "") {
       const searchParams: any = {};
       for (const column of (columns as string[])) {
         searchParams[column] = {
@@ -126,6 +126,7 @@ export class ModelService<T = any> extends AbstractModelService<T> {
       order: order as any,
       include: this.options && this.options.include ? this.options.include : undefined,
       limit: limit as number,
+      distinct: true,
       offset: offset as number,
       group: group as string[],
       transaction,
@@ -135,6 +136,7 @@ export class ModelService<T = any> extends AbstractModelService<T> {
       attributes: attributes as any,
       where: params as any,
       order: order as any,
+      distinct: true,
       include: this.options && this.options.include ? this.options.include : undefined,
       limit: limit as number,
       offset: offset as number,
