@@ -1,7 +1,7 @@
 import {getLogger, Logger, StopWatch} from "@miqro/core";
 import {CatchHandler, ErrorCallback, NextCallback} from "@miqro/handlers";
 import {Request, Response} from "express";
-import {Transaction, ModelCtor, Model, Sequelize, DataTypes} from "sequelize";
+import {DataTypes, Model, ModelCtor, Sequelize, Transaction} from "sequelize";
 
 const AuditModel = (auditModelName: string, sequelize: Sequelize): ModelCtor<Model<any>> => {
   return sequelize.define(auditModelName, {
@@ -56,10 +56,12 @@ const auditLog = async (auditModel: ModelCtor<Model<any>>, req: Request, res?: R
 export const AuditHandler = (auditModelName = "audit", sequelize: Sequelize, logger?: Logger): NextCallback => {
   logger = logger ? logger : getLogger("AuditHandler");
   const auditModel = AuditModel(auditModelName, sequelize);
+  auditModel.sync({
+    force: false
+  }).catch((e) => {
+    (logger as Logger).error(e);
+  });
   return CatchHandler(async (req, res, next) => {
-    await auditModel.sync({
-      force: false
-    });
     const originalReq = {
       headers: {
         ...req.headers
