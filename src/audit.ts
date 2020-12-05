@@ -20,7 +20,7 @@ const AuditModel = (auditModelName: string, sequelize: Sequelize): ModelCtor<Mod
     url: DataTypes.STRING,
     method: DataTypes.STRING,
     status: DataTypes.STRING,
-    resHeaders: DataTypes.STRING,
+    resHeaders: DataTypes.JSON,
     error: DataTypes.JSON,
     uuid: DataTypes.STRING
   }, {});
@@ -44,7 +44,7 @@ const auditLog = async (auditModel: ModelCtor<Model<any>>, req: Request, res?: R
     uuid: req ? req.uuid : undefined,
     took: res ? (res as any).took : undefined,
     status: res ? res.statusCode : undefined,
-    resHeaders: res ? JSON.stringify(res.getHeaders()) : undefined,
+    resHeaders: res ? res.getHeaders() : undefined,
     error: e ? {
       name: typeof e !== "string" ? e.name : undefined,
       message: typeof e !== "string" ? e.message : e,
