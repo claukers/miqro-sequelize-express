@@ -17,7 +17,7 @@ const AuditModel = (auditModelName: string, sequelize: Sequelize): ModelCtor<Mod
     username: DataTypes.STRING,
     account: DataTypes.STRING,
     groups: DataTypes.JSON,
-    url: DataTypes.STRING,
+    url: DataTypes.STRING(3000),
     method: DataTypes.STRING,
     status: DataTypes.STRING,
     resHeaders: DataTypes.JSON,
