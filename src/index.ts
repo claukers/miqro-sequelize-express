@@ -17,7 +17,7 @@ export * from "./audit";
 
 export * from "./service";
 
-export const loadModels = (sequelizercPath = ConfigPathResolver.getSequelizeRCFilePath(), logger?: Logger): SimpleMap<ModelCtor<Model<any>>> => {
+export const loadModels = (sequelizercPath = ConfigPathResolver.getSequelizeRCFilePath(), logger?: Logger): SimpleMap<ModelCtor<Model<any>>> | null => {
   if (LoaderCache.extra.models === undefined) {
     LoaderCache.extra.models = null;
     if (!existsSync(sequelizercPath)) {
@@ -33,7 +33,7 @@ export const loadModels = (sequelizercPath = ConfigPathResolver.getSequelizeRCFi
       return LoaderCache.extra.models;
     }
   } else {
-    return LoaderCache.extra.models;
+    return LoaderCache.extra.models as SimpleMap<ModelCtor<Model<any>>> | null;
   }
 
 };
