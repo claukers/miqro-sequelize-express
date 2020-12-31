@@ -202,6 +202,31 @@ describe("ModelService Func Tests", function () {
     })().then(done).catch(done);
   });
 
+  it("case 2 get with pagination and order and params 1 and search query as number", (done) => {
+    (async () => {
+      const service = new ModelService(models.post);
+      const result = await service.get({
+        params: {
+          name: "user2"
+        },
+        query: {
+          limit: 10,
+          offset: 0,
+          q: "20",
+          columns: ["amount"],
+          order: ["createdAt, DESC"]
+        },
+        body: {}
+      });
+      if (!(result instanceof Array)) {
+        strictEqual(result.count, 1);
+        strictEqual(result.rows.length, 1);
+      } else {
+        strictEqual(true, false);
+      }
+    })().then(done).catch(done);
+  });
+
   it("case 2 get with pagination and order and params 2", (done) => {
     (async () => {
       const service = new ModelService(models.post);
