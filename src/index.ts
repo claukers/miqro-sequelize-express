@@ -2,6 +2,8 @@ import {
   ConfigFileNotFoundError,
   ConfigPathResolver,
   getLogger,
+  LoaderCache,
+  loadSequelizeRC,
   Logger,
   MethodNotImplementedError,
   SimpleMap
@@ -15,20 +17,25 @@ export * from "./audit";
 
 export * from "./service";
 
-export const loadModels = (sequelizercPath = ConfigPathResolver.getSequelizeRCFilePath()): SimpleMap<ModelCtor<Model<any>>> => {
-  if (!existsSync(sequelizercPath)) {
-    // noinspection SpellCheckingInspection
-    throw new ConfigFileNotFoundError(`missing .sequelizerc file. maybe you didnt init your db config.`);
-  } else {
-    // noinspection SpellCheckingInspection
-    /* eslint-disable  @typescript-eslint/no-var-requires */
-    const sequelizerc = require(sequelizercPath);
-    const modelsFolder = sequelizerc["models-path"];
-    if (!existsSync(modelsFolder)) {
-      throw new ConfigFileNotFoundError(`missing .sequelizerc["models-path"]=[${modelsFolder}] file. maybe you didnt init your db config.`);
+export const loadModels = (sequelizercPath = ConfigPathResolver.getSequelizeRCFilePath(), logger?: Logger): SimpleMap<ModelCtor<Model<any>>> => {
+  if (LoaderCache.extra.models === undefined) {
+    LoaderCache.extra.models = null;
+    if (!existsSync(sequelizercPath)) {
+      // noinspection SpellCheckingInspection
+      throw new ConfigFileNotFoundError(`missing .sequelizerc file. maybe you didnt init your db config.`);
+    } else {
+      const config = loadSequelizeRC(sequelizercPath, logger);
+      if (!existsSync(config.modelsFolder)) {
+        throw new ConfigFileNotFoundError(`missing .sequelizerc["models-path"]=[${config.modelsFolder}] file. maybe you didnt init your db config.`);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      LoaderCache.extra.models = require(config.modelsFolder) as SimpleMap<ModelCtor<Model<any>>>;
+      return LoaderCache.extra.models;
     }
-    return require(modelsFolder) as SimpleMap<ModelCtor<Model<any>>>;
+  } else {
+    return LoaderCache.extra.models;
   }
+
 };
 
 export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any): AsyncNextCallback => {
