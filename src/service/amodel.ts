@@ -26,12 +26,12 @@ export abstract class AbstractModelService<T = any> implements ModelServiceInter
   }
 
   // noinspection JSUnusedLocalSymbols
-  public async patch(options: ModelServiceArgs): Promise<ModelServicePatchResult<T>> {
+  public async patch(options: ModelServiceArgs): Promise<ModelServicePatchResult> {
     throw new MethodNotImplementedError("Method not implemented.");
   }
 
   // noinspection JSUnusedLocalSymbols
-  public async delete(options: ModelServiceArgs): Promise<ModelServiceDeleteResult | ModelServicePatchResult<T>> {
+  public async delete(options: ModelServiceArgs): Promise<ModelServiceDeleteResult | ModelServicePatchResult> {
     throw new MethodNotImplementedError("Method not implemented.");
   }
 }

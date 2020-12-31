@@ -43,7 +43,7 @@ export class AccountModelService<T = any> extends FakeDeleteModelService<T> {
     return super.post(args, transaction);
   }
 
-  public patch(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult<T>> {
+  public patch(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult> {
     parseOptions("query", args.query, [], "no_extra");
     if (!args.session) {
       throw new ParseOptionsError("req.session not valid");
@@ -60,7 +60,7 @@ export class AccountModelService<T = any> extends FakeDeleteModelService<T> {
     return super.patch(args, transaction);
   }
 
-  public delete(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult<T>> {
+  public delete(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult> {
     parseOptions("query", args.query, [], "no_extra");
     parseOptions("body", args.body, [], "no_extra");
     if (!args.session) {

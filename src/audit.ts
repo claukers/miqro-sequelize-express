@@ -24,7 +24,7 @@ const AuditModel = (auditModelName: string, sequelize: Sequelize): ModelCtor<Mod
     error: DataTypes.JSON,
     uuid: DataTypes.STRING
   }, {});
-}
+};
 
 const auditLog = async (auditModel: ModelCtor<Model<any>>, req: Request, res?: Response, e?: Error | string, originalRequest?: any, transaction?: Transaction): Promise<void> => {
   await auditModel.create({
@@ -97,8 +97,12 @@ export const AuditHandler = (auditModelName = "audit", sequelize: Sequelize, log
   }, logger);
 }
 
-export const AuditErrorHandler = (logger: Logger): ErrorCallback =>
-  async (e, req, res, next) => {
+export const AuditErrorHandler = (logger: Logger): ErrorCallback => {
+  logger = logger ? logger : getLogger("AuditErrorHandler");
+  return async (e, req, res, next) => {
     (req as any).audit_error = e;
+    logger.error(e);
     next(e);
   };
+}
+

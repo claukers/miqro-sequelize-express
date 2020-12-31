@@ -2,25 +2,25 @@ import {AbstractModelService} from "./amodel";
 import {
   attributesParseOption,
   groupParseOption,
+  ModelServiceArgs,
   ModelServiceDeleteResult,
   ModelServiceGetResult,
+  ModelServiceOptions,
   ModelServicePatchResult,
   ModelServicePostResult,
-  ModelServiceArgs,
-  ModelServiceOptions,
   orderParseOption,
   paginationParseOption,
   searchParseOption
 } from "./model";
 
 import {
-  Model,
-  ModelCtor,
-  WhereOptions,
   col as SequelizeCol,
   fn as SequelizeFn,
+  Model,
+  ModelCtor,
   Op as SequelizeOp,
-  Transaction
+  Transaction,
+  WhereOptions
 } from "sequelize";
 
 import {parseQueryOptions} from "@miqro/handlers";
@@ -101,7 +101,7 @@ export class ModelService<T = any> extends AbstractModelService<T> {
     if (order) {
       for (let i = 0; i < (order as string[]).length; i++) {
         (order as any)[i] = (order as string[])[i].split(",").map(s => s.trim());
-        const orderI = (order as string[][])[i];
+        const orderI = (order as any)[i];
         if (!(orderI instanceof Array) || orderI.length !== 2 || (orderI[1] !== "DESC" && orderI[1] !== "ASC") || typeof orderI[0] !== "string") {
           throw new ParseOptionsError(`query.order not array of [column, "DESC"|"ASC"]`);
         }
@@ -111,7 +111,10 @@ export class ModelService<T = any> extends AbstractModelService<T> {
       const searchParams: any = {};
       for (const column of (columns as string[])) {
         searchParams[column] = {
-          [SequelizeOp.like]: "%" + q + "%"
+          [SequelizeOp.or]: {
+            [SequelizeOp.like]: "%" + q + "%",
+            //[SequelizeOp.eq]: q
+          }
         };
       }
       params = {
@@ -169,7 +172,7 @@ export class ModelService<T = any> extends AbstractModelService<T> {
     }
   }
 
-  public async patch({body, query, params, session}: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult<T>> {
+  public async patch({body, query, params}: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult> {
     parseOptions("query", query, [], "no_extra");
     const patch = parseOptions("body", body, [], "add_extra");
     if (
@@ -184,7 +187,7 @@ export class ModelService<T = any> extends AbstractModelService<T> {
     return rowCount;
   }
 
-  public async delete({body, query, params, session}: ModelServiceArgs, transaction?: Transaction): Promise<ModelServiceDeleteResult | ModelServicePatchResult<T>> {
+  public async delete({body, query, params}: ModelServiceArgs, transaction?: Transaction): Promise<ModelServiceDeleteResult | ModelServicePatchResult> {
     parseOptions("query", query, [], "no_extra");
     parseOptions("body", body, [], "no_extra");
     return this.model.destroy({

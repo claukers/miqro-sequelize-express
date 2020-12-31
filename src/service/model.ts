@@ -15,7 +15,7 @@ export type ModelServiceGetResult<T = any> =
 
 export type ModelServicePostResult<T = any> = Model<T> | Model<T>[];
 
-export type ModelServicePatchResult<T = any> = number;
+export type ModelServicePatchResult = number;
 
 export type ModelServiceDeleteResult = number;
 
@@ -26,9 +26,9 @@ export interface ModelServiceInterface<T = any> {
 
   put(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T>>;
 
-  patch(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult<T>>;
+  patch(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult>;
 
-  delete(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServiceDeleteResult | ModelServicePatchResult<T>>;
+  delete(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServiceDeleteResult | ModelServicePatchResult>;
 }
 
 export type ModelServiceInclude<T = any> = {
