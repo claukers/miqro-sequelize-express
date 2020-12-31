@@ -17,9 +17,8 @@ export * from "./audit";
 
 export * from "./service";
 
-export const loadModels = (sequelizercPath = ConfigPathResolver.getSequelizeRCFilePath(), logger?: Logger): SimpleMap<ModelCtor<Model<any>>> | null => {
+export const loadModels = (sequelizercPath = ConfigPathResolver.getSequelizeRCFilePath(), logger?: Logger): SimpleMap<ModelCtor<Model<any>>> => {
   if (LoaderCache.extra.models === undefined) {
-    LoaderCache.extra.models = null;
     if (!existsSync(sequelizercPath)) {
       // noinspection SpellCheckingInspection
       throw new ConfigFileNotFoundError(`missing .sequelizerc file. maybe you didnt init your db config.`);
@@ -33,7 +32,7 @@ export const loadModels = (sequelizercPath = ConfigPathResolver.getSequelizeRCFi
       return LoaderCache.extra.models;
     }
   } else {
-    return LoaderCache.extra.models as SimpleMap<ModelCtor<Model<any>>> | null;
+    return LoaderCache.extra.models as SimpleMap<ModelCtor<Model<any>>>;
   }
 
 };
