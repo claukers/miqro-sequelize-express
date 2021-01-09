@@ -63,24 +63,38 @@ export interface ModelServiceOptions {
 
 // ?group=name&group=bla
 export const groupParseOption: ParseOption = {
-  name: "group", type: "array", arrayType: "string", arrayMinLength: 1, required: false
+  name: "group", type: "array", arrayType: "string", arrayMinLength: 1, required: false,
+  description: "a list of attributes by which the operation will be group by"
 };
 
 // ?attributes=id&attributes=sum,amount,total
 export const attributesParseOption: ParseOption = {
-  name: "attributes", type: "array", arrayType: "string", arrayMinLength: 1, required: false
+  name: "attributes", type: "array", arrayType: "string", arrayMinLength: 1, required: false,
+  description: "a list of attributes that the operation will try to obtain"
 };
 
 // ?limit=10&offset=0
 export const paginationParseOption: ParseOption[] = [
-  {name: "limit", type: "number", required: false},
-  {name: "offset", type: "number", required: false}
+  {
+    name: "limit", type: "number", required: false,
+    description: "the limit of number of results for the operation"
+  },
+  {
+    name: "offset", type: "number", required: false,
+    description: "the offset for the results for the operation"
+  }
 ];
 
 // ?columns=name&columns=age&q=text
 export const searchParseOption: ParseOption[] = [
-  {name: "columns", type: "array", arrayType: "string", arrayMinLength: 1, required: false},
-  {name: "q", type: "string", required: false}
+  {
+    name: "columns", type: "array", arrayType: "string", arrayMinLength: 1, required: false,
+    description: "the columns by which the operation will be filtered using the req.query.q"
+  },
+  {
+    name: "q", type: "string", required: false,
+    description: "the value by which the operation will be filtered using req.query.columns"
+  }
 ];
 
 // ?order=name,DESC&order=age,ASC
@@ -89,5 +103,6 @@ export const orderParseOption: ParseOption = {
   type: "array",
   arrayMinLength: 1,
   arrayType: "string",
-  required: false
+  required: false,
+  description: "a list of <ATTRIBUTE>,[DESC|ASC] that will alter the order result of the operation"
 };
