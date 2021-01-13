@@ -78,12 +78,12 @@ describe("ModelService Func Tests", function () {
         body: {}
       });
       if (!(result instanceof Array)) {
-        strictEqual(true, false);
+        strictEqual((result.count as any[]).length, 3);
+        strictEqual((result.rows[0] as any).dataValues.total, 30);
+        strictEqual((result.rows[1] as any).dataValues.total, 60);
+        strictEqual((result.rows[2] as any).dataValues.total, 10);
       } else {
-        strictEqual(result.length, 3);
-        strictEqual((result[0] as any).dataValues.total, 30);
-        strictEqual((result[1] as any).dataValues.total, 60);
-        strictEqual((result[2] as any).dataValues.total, 10);
+        strictEqual(true, false);
       }
 
     })().then(done).catch(done);
@@ -100,10 +100,11 @@ describe("ModelService Func Tests", function () {
         body: {}
       });
       if (!(result instanceof Array)) {
-        strictEqual(true, false);
+        strictEqual(result.count, 4);
+        strictEqual(result.rows.length, 1);
+        strictEqual((result.rows[0] as any).dataValues.total, 100);
       } else {
-        strictEqual(result.length, 1);
-        strictEqual((result[0] as any).dataValues.total, 100);
+        strictEqual(true, false);
       }
 
     })().then(done).catch(done);

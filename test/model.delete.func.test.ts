@@ -41,11 +41,14 @@ describe("ModelService Func Tests", function () {
         query: {},
         body: {}
       });
+      console.log(require("util").inspect(total));
+      console.log(require("util").inspect(total2));
+      console.log(require("util").inspect(result));
       if (!result) {
         strictEqual(true, false);
       } else {
-        strictEqual(result, (total as []).length);
-        strictEqual((total2 as []).length, (total as []).length);
+        strictEqual(result, total.count);
+        strictEqual(total2.count, total.count);
         const totalD2 = await fakeD.get({
           params: {
             text: "text1"
@@ -53,7 +56,7 @@ describe("ModelService Func Tests", function () {
           query: {},
           body: {}
         });
-        strictEqual((totalD2 as []).length, 0);
+        strictEqual(totalD2.count, 0);
         const totalA2 = await all.get({
           params: {
             text: "text1"
@@ -61,7 +64,7 @@ describe("ModelService Func Tests", function () {
           query: {},
           body: {}
         });
-        strictEqual((totalA2 as []).length, 2);
+        strictEqual(totalA2.count, 2);
 
         const totalD4 = await fakeD.patch({
           params: {

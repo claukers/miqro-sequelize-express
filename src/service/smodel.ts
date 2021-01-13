@@ -123,7 +123,7 @@ export class ModelService<T = any> extends AbstractModelService<T> {
       } as any;
     }
 
-    return limit !== undefined && offset !== undefined ? (transaction ? this.model.findAndCountAll({
+    return transaction ? this.model.findAndCountAll({
       attributes: attributes as any,
       where: params as any,
       order: order as any,
@@ -144,22 +144,7 @@ export class ModelService<T = any> extends AbstractModelService<T> {
       limit: limit as number,
       offset: offset as number,
       group: group as string[],
-    })) : (transaction ? this.model.findAll({
-      attributes: attributes as any,
-      where: params as WhereOptions,
-      order: order as any,
-      include: this.options && this.options.include ? this.options.include : undefined,
-      group: group as string[],
-      transaction,
-      lock: true,
-      skipLocked
-    }) : this.model.findAll({
-      attributes: attributes as any,
-      where: params as any,
-      group: group as string[],
-      order: order as any,
-      include: this.options && this.options.include ? this.options.include : undefined,
-    }))
+    })
   }
 
   public async post({body, query, params}: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T>> {

@@ -9,9 +9,7 @@ export interface ModelServiceArgs {
   session?: Session;
 }
 
-export type ModelServiceGetResult<T = any> =
-  Model<T>[]
-  | { rows: Model<T>[]; count: number | { name: string; count: number; }[] };
+export type ModelServiceGetResult<T = any> = { rows: Model<T>[]; count: number | { name: string; count: number; }[] };
 
 export type ModelServicePostResult<T = any> = Model<T> | Model<T>[];
 
@@ -77,10 +75,15 @@ export const attributesParseOption: ParseOption = {
 export const paginationParseOption: ParseOption[] = [
   {
     name: "limit", type: "number", required: false,
+    defaultValue: 10,
+    numberMax: 150,
+    numberMin: 0,
     description: "the limit of number of results for the operation"
   },
   {
     name: "offset", type: "number", required: false,
+    defaultValue: 0,
+    numberMin: 0,
     description: "the offset for the results for the operation"
   }
 ];
