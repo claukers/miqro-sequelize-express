@@ -51,6 +51,7 @@ export type ModelServiceInclude<T = any> = {
 }[];
 
 export interface ModelServiceOptions {
+  searchColumns?: string[];
   disableAttributesQuery?: boolean;
   include?: ModelServiceInclude;
   disableOrderQuery?: boolean;
@@ -89,9 +90,9 @@ export const paginationParseOption: ParseOption[] = [
 ];
 
 // ?columns=name&columns=age&q=text
-export const searchParseOption: ParseOption[] = [
+export const searchParseOption: (searchColumns?: string[]) => ParseOption[] = (searchColumns?: string[]) => [
   {
-    name: "columns", type: "array", arrayType: "string", arrayMinLength: 1, required: false,
+    name: "columns", type: "array", arrayType: searchColumns ? "enum" : "string", enumValues: searchColumns, arrayMinLength: 1, required: false,
     description: "the columns by which the operation will be filtered using the req.query.q"
   },
   {

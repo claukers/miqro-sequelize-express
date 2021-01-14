@@ -291,4 +291,57 @@ describe("ModelService Func Tests", function () {
       done();
     });
   });
+
+  it("case 2 get with pagination and order and params 1 and search query with column limit", (done) => {
+    (async () => {
+      const service = new ModelService(models.post, {
+        searchColumns: ["name"]
+      });
+      try {
+        await service.get({
+          params: {
+            name: "user2"
+          },
+          query: {
+            limit: 10,
+            offset: 0,
+            q: "email3",
+            columns: ["email", "name"],
+            order: ["createdAt, DESC"]
+          },
+          body: {}
+        });
+      } catch (e) {
+        strictEqual(e.message, "query.columns not array1: of enum as defined. valid values [name]");
+      }
+    })().then(done).catch(done);
+  });
+
+  it("case 2 get with pagination and order and params 1 and search query with column limit happy path", (done) => {
+    (async () => {
+      const service = new ModelService(models.post, {
+        searchColumns: ["email"]
+      });
+
+      const result = await service.get({
+        params: {
+          name: "user2"
+        },
+        query: {
+          limit: 10,
+          offset: 0,
+          q: "email3",
+          columns: ["email"],
+          order: ["createdAt, DESC"]
+        },
+        body: {}
+      });
+      if (!(result instanceof Array)) {
+        strictEqual(result.count, 1);
+        strictEqual(result.rows.length, 1);
+      } else {
+        strictEqual(true, false);
+      }
+    })().then(done).catch(done);
+  });
 });

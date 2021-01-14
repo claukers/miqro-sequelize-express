@@ -39,7 +39,7 @@ export class ModelService<T = any> extends AbstractModelService<T> {
       this.getQueryParseOptions.push(orderParseOption);
       this.getQueryParseOptions.push(attributesParseOption);
       this.getQueryParseOptions.push(groupParseOption);
-      this.getQueryParseOptions = this.getQueryParseOptions.concat(searchParseOption);
+      this.getQueryParseOptions = this.getQueryParseOptions.concat(searchParseOption(undefined));
     } else {
       if (!options.disableOrderQuery) {
         this.getQueryParseOptions.push(orderParseOption);
@@ -54,7 +54,7 @@ export class ModelService<T = any> extends AbstractModelService<T> {
         this.getQueryParseOptions.push(groupParseOption);
       }
       if (!options.disableSearchQuery) {
-        this.getQueryParseOptions = this.getQueryParseOptions.concat(searchParseOption);
+        this.getQueryParseOptions = this.getQueryParseOptions.concat(searchParseOption(options ? options.searchColumns : undefined));
       }
     }
   }
