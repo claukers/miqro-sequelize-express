@@ -108,5 +108,5 @@ export const orderParseOption: ParseOption = {
   arrayMinLength: 1,
   arrayType: "string",
   required: false,
-  description: "a list of <ATTRIBUTE>,[DESC|ASC] that will alter the order result of the operation"
+  description: "a list of ATTRIBUTE,DESC or ATTRIBUTE,ASC that will alter the order result of the operation"
 };
