@@ -2,7 +2,7 @@ import {Util} from "@miqro/core";
 import {strictEqual} from "assert";
 import {describe, it} from "mocha";
 import {resolve} from "path";
-import {FakeDeleteModelService, loadModels, ModelService} from "../src";
+import {FakeDeleteModelService, loadModels, MapModelHandler, ModelService} from "../src";
 
 process.env.NODE_ENV = "test";
 process.env.MIQRO_DIRNAME = resolve(__dirname, "data");
@@ -249,5 +249,46 @@ describe("ModelService Func Tests", function () {
         strictEqual(true, false);
       }
     })().then(done).catch(done);
+  });
+
+  it("case 2 get with pagination and order and params 2 and mapping", (done) => {
+    (async () => {
+      const service = new ModelService(models.post);
+      const req: any = {results: []};
+      const result = await service.get({
+        params: {
+          email: "email1"
+        },
+        query: {
+          limit: 10,
+          offset: 0,
+          order: ["createdAt, DESC"]
+        },
+        body: {}
+      });
+      req.results.push(result);
+      MapModelHandler(({email}) => {
+        return {email};
+      })(req as any, {} as any, (e: any) => {
+        strictEqual(e, undefined);
+        if (!(req.results[0] instanceof Array)) {
+          strictEqual(req.results[0].count, 2);
+          strictEqual(req.results[0].rows.length, 2);
+          strictEqual(Object.keys(req.results[0].rows[0]).length, 1);
+        } else {
+          strictEqual(true, false);
+        }
+      });
+    })().then(done).catch(done);
+  });
+
+  it("map throws", (done) => {
+    const req: any = {results: [{a: 1}]};
+    MapModelHandler(() => {
+      throw new Error("asd");
+    })(req as any, {} as any, (e: any) => {
+      strictEqual(e.message, "asd");
+      done();
+    });
   });
 });

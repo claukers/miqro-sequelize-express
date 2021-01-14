@@ -8,7 +8,7 @@ import {
   MethodNotImplementedError,
   SimpleMap
 } from "@miqro/core";
-import {AsyncNextCallback, getResults, Handler, NextCallback, setResults} from "@miqro/handlers";
+import {getResults, Handler, NextCallback, NextHandler, setResults} from "@miqro/handlers";
 import {ModelServiceArgs, ModelServiceInterface} from "./service";
 import {Model, ModelCtor} from "sequelize";
 import {existsSync} from "fs";
@@ -37,11 +37,12 @@ export const loadModels = (sequelizercPath = ConfigPathResolver.getSequelizeRCFi
 
 };
 
-export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any): AsyncNextCallback => {
-  return async (req, res, next) => {
+export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any, logger?: Logger): NextCallback => {
+  logger = logger ? logger : getLogger("MapModelHandler");
+  return NextHandler(async (req, res, next) => {
     const results = getResults(req);
     if (results) {
-      const mappedResults = results.map((result) => {
+      const mappedResults = results.map((result, index, array) => {
         if (!result) {
           return null;
         } else {
@@ -57,17 +58,14 @@ export const MapModelHandler = (callbackfn: (value: any, index: number, array: a
               })
             };
           } else {
-            const [ret] = [result].map((value, index, array) => {
-              return callbackfn(value, index, array, req);
-            });
-            return ret;
+            return callbackfn(result, index, array, req);
           }
         }
       });
       setResults(req, mappedResults);
       next();
     }
-  };
+  }, logger);
 };
 
 export const ModelHandler = (service: ModelServiceInterface, logger?: Logger): NextCallback => {
