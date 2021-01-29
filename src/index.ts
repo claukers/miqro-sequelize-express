@@ -1,41 +1,14 @@
 import {
-  ConfigFileNotFoundError,
-  ConfigPathResolver,
   getLogger,
-  LoaderCache,
-  loadSequelizeRC,
   Logger,
   MethodNotImplementedError,
-  SimpleMap
 } from "@miqro/core";
-import {getResults, Handler, NextCallback, NextHandler, setResults} from "@miqro/handlers";
-import {ModelServiceArgs, ModelServiceInterface} from "./service";
-import {Model, ModelCtor} from "sequelize";
-import {existsSync} from "fs";
+import { getResults, Handler, NextCallback, NextHandler, setResults } from "@miqro/handlers";
+import { ModelServiceArgs, ModelServiceInterface } from "./service";
 
 export * from "./audit";
 
 export * from "./service";
-
-export const loadModels = (sequelizercPath = ConfigPathResolver.getSequelizeRCFilePath(), logger?: Logger): SimpleMap<ModelCtor<Model<any>>> => {
-  if (LoaderCache.extra.models === undefined) {
-    if (!existsSync(sequelizercPath)) {
-      // noinspection SpellCheckingInspection
-      throw new ConfigFileNotFoundError(`missing .sequelizerc file. maybe you didnt init your db config.`);
-    } else {
-      const config = loadSequelizeRC(sequelizercPath, logger);
-      if (!existsSync(config.modelsFolder)) {
-        throw new ConfigFileNotFoundError(`missing .sequelizerc["models-path"]=[${config.modelsFolder}] file. maybe you didnt init your db config.`);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      LoaderCache.extra.models = require(config.modelsFolder) as SimpleMap<ModelCtor<Model<any>>>;
-      return LoaderCache.extra.models;
-    }
-  } else {
-    return LoaderCache.extra.models as SimpleMap<ModelCtor<Model<any>>>;
-  }
-
-};
 
 export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any, logger?: Logger): NextCallback => {
   logger = logger ? logger : getLogger("MapModelHandler");

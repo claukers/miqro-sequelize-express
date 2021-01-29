@@ -1,7 +1,8 @@
-import {getLogger, Logger, StopWatch} from "@miqro/core";
-import {CatchHandler, ErrorCallback, NextCallback} from "@miqro/handlers";
-import {Request, Response} from "express";
-import {DataTypes, Model, ModelCtor, Sequelize, Transaction} from "sequelize";
+import { getLogger, Logger, StopWatch } from "@miqro/core";
+import { Database } from "@miqro/database";
+import { CatchHandler, ErrorCallback, NextCallback } from "@miqro/handlers";
+import { Request, Response } from "express";
+import { DataTypes, Model, ModelCtor, Sequelize, Transaction } from "sequelize";
 
 const AuditModel = (auditModelName: string, sequelize: Sequelize): ModelCtor<Model<any>> => {
   return sequelize.define(auditModelName, {
@@ -30,7 +31,7 @@ const auditLog = async (auditModel: ModelCtor<Model<any>>, req: Request, res?: R
   await auditModel.create({
     originalReq: originalRequest,
     headers: req ? req.headers : undefined,
-    remoteAddress: req ? req.connection.remoteAddress : undefined,
+    remoteAddress: req ? req.socket.remoteAddress : undefined,
     body: req ? req.body : undefined,
     query: req ? req.query : undefined,
     params: req ? req.params : undefined,
@@ -50,12 +51,12 @@ const auditLog = async (auditModel: ModelCtor<Model<any>>, req: Request, res?: R
       message: typeof e !== "string" ? e.message : e,
       stack: typeof e !== "string" ? e.stack : undefined,
     } : undefined
-  }, transaction ? {transaction} : undefined);
+  }, transaction ? { transaction } : undefined);
 };
 
-export const AuditHandler = (auditModelName = "audit", sequelize: Sequelize, logger?: Logger): NextCallback => {
+export const AuditHandler = (auditModelName = "audit", db: Database, logger?: Logger): NextCallback => {
   logger = logger ? logger : getLogger("AuditHandler");
-  const auditModel = AuditModel(auditModelName, sequelize);
+  const auditModel = AuditModel(auditModelName, db.sequelize);
   auditModel.sync({
     force: false
   }).catch((e) => {
@@ -66,7 +67,7 @@ export const AuditHandler = (auditModelName = "audit", sequelize: Sequelize, log
       headers: {
         ...req.headers
       },
-      remoteAddress: req.connection.remoteAddress,
+      remoteAddress: req.socket.remoteAddress,
       body: typeof req.body === "object" ? {
         ...req.body
       } : req.body,

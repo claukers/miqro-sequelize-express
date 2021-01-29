@@ -1,15 +1,16 @@
-import {Util} from "@miqro/core";
-import {strictEqual} from "assert";
-import {describe, it} from "mocha";
-import {resolve} from "path";
-import {FakeDeleteModelService, loadModels, MapModelHandler, ModelService} from "../src";
+import { Util } from "@miqro/core";
+import { Database } from "@miqro/database";
+import { strictEqual } from "assert";
+import { describe, it } from "mocha";
+import { resolve } from "path";
+import { FakeDeleteModelService, MapModelHandler, ModelService } from "../src";
 
 process.env.NODE_ENV = "test";
 process.env.MIQRO_DIRNAME = resolve(__dirname, "data");
 process.chdir(process.env.MIQRO_DIRNAME);
 Util.loadConfig();
 
-const models = loadModels();
+const models = Database.getInstance().models;
 
 describe("ModelService Func Tests", function () {
   this.timeout(100000);
@@ -254,7 +255,7 @@ describe("ModelService Func Tests", function () {
   it("case 2 get with pagination and order and params 2 and mapping", (done) => {
     (async () => {
       const service = new ModelService(models.post);
-      const req: any = {results: []};
+      const req: any = { results: [] };
       const result = await service.get({
         params: {
           email: "email1"
@@ -267,8 +268,8 @@ describe("ModelService Func Tests", function () {
         body: {}
       });
       req.results.push(result);
-      MapModelHandler(({email}) => {
-        return {email};
+      MapModelHandler(({ email }) => {
+        return { email };
       })(req as any, {} as any, (e: any) => {
         strictEqual(e, undefined);
         if (!(req.results[0] instanceof Array)) {
@@ -283,7 +284,7 @@ describe("ModelService Func Tests", function () {
   });
 
   it("map throws", (done) => {
-    const req: any = {results: [{a: 1}]};
+    const req: any = { results: [{ a: 1 }] };
     MapModelHandler(() => {
       throw new Error("asd");
     })(req as any, {} as any, (e: any) => {
