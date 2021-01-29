@@ -1,4 +1,4 @@
-import {AbstractModelService} from "./amodel";
+import { AbstractModelService } from "./amodel";
 import {
   attributesParseOption,
   groupParseOption,
@@ -23,14 +23,14 @@ import {
   WhereOptions
 } from "sequelize";
 
-import {parseQueryOptions} from "@miqro/handlers";
+import { parseQueryOptions } from "@miqro/handlers";
 
-import {ParseOption, parseOptions, ParseOptionsError} from "@miqro/core";
+import { ParseOption, parseOptions, ParseOptionsError } from "@miqro/core";
 
-export class ModelService<T = any> extends AbstractModelService<T> {
+export class ModelService<T = any, T2 = any> extends AbstractModelService<T, T2> {
   protected getQueryParseOptions: ParseOption[];
 
-  constructor(protected model: ModelCtor<Model<T>>, protected options?: ModelServiceOptions) {
+  constructor(protected model: ModelCtor<Model<T, T2>>, protected options?: ModelServiceOptions) {
     super();
 
     this.getQueryParseOptions = [];
@@ -59,9 +59,9 @@ export class ModelService<T = any> extends AbstractModelService<T> {
     }
   }
 
-  public async get({body, query, params}: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T>> {
+  public async get({ body, query, params }: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T, T2>> {
     parseOptions("body", body, [], "no_extra");
-    const {limit, offset, columns, q, order, attributes, group} = parseQueryOptions("query", query, this.getQueryParseOptions, "no_extra");
+    const { limit, offset, columns, q, order, attributes, group } = parseQueryOptions("query", query, this.getQueryParseOptions, "no_extra");
     if (offset !== undefined && limit === undefined) {
       throw new ParseOptionsError(`query.limit needed for query.offset`);
     }
@@ -84,10 +84,10 @@ export class ModelService<T = any> extends AbstractModelService<T> {
             throw new ParseOptionsError(`query.attributes [${attribute}] not valid!`);
           }
           const [fnName, col, name] = fn;
-          parseOptions(`query.attributes`, {fn: fnName, col, name}, [
-            {name: "fn", type: "enum", enumValues: ["sum"], required: true},
-            {name: "col", type: "string", required: true},
-            {name: "name", type: "string", required: true}
+          parseOptions(`query.attributes`, { fn: fnName, col, name }, [
+            { name: "fn", type: "enum", enumValues: ["sum"], required: true },
+            { name: "col", type: "string", required: true },
+            { name: "name", type: "string", required: true }
           ], "no_extra");
 
           try {
@@ -147,17 +147,17 @@ export class ModelService<T = any> extends AbstractModelService<T> {
     })
   }
 
-  public async post({body, query, params}: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T>> {
+  public async post({ body, query, params }: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T, T2>> {
     parseOptions("params", params, [], "no_extra");
     parseOptions("query", query, [], "no_extra");
     if (body instanceof Array) {
-      return this.model.bulkCreate(body, transaction ? {transaction} : undefined);
+      return this.model.bulkCreate(body, transaction ? { transaction } : undefined);
     } else {
-      return this.model.create(body as any, transaction ? {transaction} : undefined);
+      return this.model.create(body as any, transaction ? { transaction } : undefined);
     }
   }
 
-  public async patch({body, query, params}: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult> {
+  public async patch({ body, query, params }: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult<T, T2>> {
     parseOptions("query", query, [], "no_extra");
     const patch = parseOptions("body", body, [], "add_extra");
     if (
@@ -165,14 +165,13 @@ export class ModelService<T = any> extends AbstractModelService<T> {
       (patch as any) instanceof Array) {
       throw new ParseOptionsError(`patch not object`);
     }
-    const [rowCount] = await this.model.update(body as unknown as Partial<T>, {
+    return await this.model.update(body as unknown as Partial<T>, {
       where: params as WhereOptions,
       transaction
     });
-    return rowCount;
   }
 
-  public async delete({body, query, params}: ModelServiceArgs, transaction?: Transaction): Promise<ModelServiceDeleteResult | ModelServicePatchResult> {
+  public async delete({ body, query, params }: ModelServiceArgs, transaction?: Transaction): Promise<ModelServiceDeleteResult | ModelServicePatchResult> {
     parseOptions("query", query, [], "no_extra");
     parseOptions("body", body, [], "no_extra");
     return this.model.destroy({

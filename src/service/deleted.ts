@@ -1,12 +1,12 @@
-import {ModelServiceArgs, ModelServiceGetResult, ModelServicePatchResult, ModelServicePostResult} from "./model";
-import {Transaction} from "sequelize";
-import {ModelService} from "./smodel";
-import {parseOptions, ParseOptionsError} from "@miqro/core";
+import { ModelServiceArgs, ModelServiceGetResult, ModelServicePatchResult, ModelServicePostResult } from "./model";
+import { Transaction } from "sequelize";
+import { ModelService } from "./smodel";
+import { parseOptions, ParseOptionsError } from "@miqro/core";
 
-export class FakeDeleteModelService<T = any> extends ModelService<T> {
+export class FakeDeleteModelService<T = any, T2 = any> extends ModelService<T, T2> {
   protected modelIsDeletedAttribute = "deleted";
 
-  public async get(args: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T>> {
+  public async get(args: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T, T2>> {
     parseOptions("body", args.body, [], "no_extra");
     if (args.params[this.modelIsDeletedAttribute] !== undefined) {
       throw new ParseOptionsError(`not valid params.${this.modelIsDeletedAttribute}`);
@@ -15,7 +15,7 @@ export class FakeDeleteModelService<T = any> extends ModelService<T> {
     return super.get(args, transaction, skipLocked);
   }
 
-  public async delete(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult> {
+  public async delete(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult<T, T2>> {
     parseOptions("query", args.query, [], "no_extra");
     parseOptions("body", args.body, [], "no_extra");
     if (args.params[this.modelIsDeletedAttribute] !== undefined) {
@@ -27,7 +27,7 @@ export class FakeDeleteModelService<T = any> extends ModelService<T> {
     return super.patch(args, transaction);
   }
 
-  public async patch(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult> {
+  public async patch(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult<T, T2>> {
     parseOptions("query", args.query, [], "no_extra");
     if (args.params[this.modelIsDeletedAttribute] !== undefined) {
       throw new ParseOptionsError(`not valid params.${this.modelIsDeletedAttribute}`);
@@ -40,7 +40,7 @@ export class FakeDeleteModelService<T = any> extends ModelService<T> {
     return super.patch(args, transaction);
   }
 
-  public async post(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T>> {
+  public async post(args: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T, T2>> {
     parseOptions("params", args.params, [], "no_extra");
     parseOptions("query", args.query, [], "no_extra");
     if (args.body instanceof Array) {

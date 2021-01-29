@@ -31,7 +31,7 @@ describe("ModelService Func Tests", function () {
       if (!result) {
         strictEqual(true, false);
       } else {
-        strictEqual(result, 2);
+        strictEqual(result[0], 2);
       }
 
     })().then(done).catch(done);

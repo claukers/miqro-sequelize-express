@@ -1,6 +1,6 @@
-import {ParseOption, Session, SimpleMap, SimpleTypes} from "@miqro/core";
+import { ParseOption, Session, SimpleMap, SimpleTypes } from "@miqro/core";
 
-import {Model, ModelCtor, Transaction, WhereOptions} from "sequelize";
+import { Model, ModelCtor, Transaction, WhereOptions } from "sequelize";
 
 export interface ModelServiceArgs {
   body: SimpleMap<SimpleTypes>;
@@ -9,22 +9,22 @@ export interface ModelServiceArgs {
   session?: Session;
 }
 
-export type ModelServiceGetResult<T = any> = { rows: Model<T>[]; count: number | { name: string; count: number; }[] };
+export type ModelServiceGetResult<T = any, T2 = any> = { rows: Model<T, T2>[]; count: number | { name: string; count: number; }[] };
 
-export type ModelServicePostResult<T = any> = Model<T> | Model<T>[];
+export type ModelServicePostResult<T = any, T2 = any> = Model<T, T2> | Model<T, T2>[];
 
-export type ModelServicePatchResult = number;
+export type ModelServicePatchResult<T = any, T2 = any> = [number, Model<T, T2>[]];
 
 export type ModelServiceDeleteResult = number;
 
-export interface ModelServiceInterface<T = any> {
-  get(options: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T>>;
+export interface ModelServiceInterface<T = any, T2 = any> {
+  get(options: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T, T2>>;
 
-  post(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T>>;
+  post(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T, T2>>;
 
-  put(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T>>;
+  put(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePostResult<T, T2>>;
 
-  patch(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult>;
+  patch(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServicePatchResult<T, T2>>;
 
   delete(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServiceDeleteResult | ModelServicePatchResult>;
 }
