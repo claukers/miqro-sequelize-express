@@ -61,7 +61,7 @@ export class ModelService<T = any, T2 = any> extends AbstractModelService<T, T2>
 
   public async get({ body, query, params }: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T, T2>> {
     parseOptions("body", body, [], "no_extra");
-    const { limit, offset, columns, q, order, attributes, group } = parseQueryOptions("query", query, this.getQueryParseOptions, "no_extra");
+    const { limit, offset, columns, q, order, attributes, group } = parseQueryOptions("query", query, this.getQueryParseOptions, "add_extra");
     if (offset !== undefined && limit === undefined) {
       throw new ParseOptionsError(`query.limit needed for query.offset`);
     }
