@@ -165,18 +165,20 @@ export class ModelService<T = any, T2 = any> extends AbstractModelService<T, T2>
       (patch as any) instanceof Array) {
       throw new ParseOptionsError(`patch not object`);
     }
-    return await this.model.update(body as unknown as Partial<T>, {
+    const [count, rows] = await this.model.update(body as unknown as Partial<T>, {
       where: params as WhereOptions,
       transaction
     });
+    return { count, rows };
   }
 
-  public async delete({ body, query, params }: ModelServiceArgs, transaction?: Transaction): Promise<ModelServiceDeleteResult | ModelServicePatchResult> {
+  public async delete({ body, query, params }: ModelServiceArgs, transaction?: Transaction): Promise<ModelServiceDeleteResult | ModelServicePatchResult<T, T2>> {
     parseOptions("query", query, [], "no_extra");
     parseOptions("body", body, [], "no_extra");
-    return this.model.destroy({
+    const count = await this.model.destroy({
       where: params as WhereOptions,
       transaction
     });
+    return { count };
   }
 }

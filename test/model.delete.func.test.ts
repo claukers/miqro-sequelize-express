@@ -48,8 +48,7 @@ describe("ModelService Func Tests", function () {
       if (!result) {
         strictEqual(true, false);
       } else {
-        strictEqual(result.length, 1);
-        strictEqual(result[0], total.count);
+        strictEqual(result.count, total.count);
         strictEqual(total2.count, total.count);
         const totalD2 = await fakeD.get({
           params: {
@@ -77,8 +76,7 @@ describe("ModelService Func Tests", function () {
             amount: 10
           }
         });
-        strictEqual(totalD4.length, 1);
-        strictEqual(totalD4[0], 0);
+        strictEqual(totalD4.count, 0);
 
         const totalD3 = await fakeD.patch({
           params: {
@@ -89,8 +87,7 @@ describe("ModelService Func Tests", function () {
             amount: 10
           }
         });
-        strictEqual(totalD3.length, 1);
-        strictEqual(totalD3[0], 1);
+        strictEqual(totalD3.count, 1);
 
         await fakeD.patch({
           params: {
@@ -101,7 +98,7 @@ describe("ModelService Func Tests", function () {
             amount: 20
           }
         });
-        strictEqual(totalD3[0], 1);
+        strictEqual(totalD3.count, 1);
 
       }
 

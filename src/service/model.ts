@@ -13,9 +13,9 @@ export type ModelServiceGetResult<T = any, T2 = any> = { rows: Model<T, T2>[]; c
 
 export type ModelServicePostResult<T = any, T2 = any> = Model<T, T2> | Model<T, T2>[];
 
-export type ModelServicePatchResult<T = any, T2 = any> = [number, Model<T, T2>[]];
+export type ModelServicePatchResult<T = any, T2 = any> = { count: number, rows?: Model<T, T2>[] };
 
-export type ModelServiceDeleteResult = number;
+export type ModelServiceDeleteResult = { count: number };
 
 export interface ModelServiceInterface<T = any, T2 = any> {
   get(options: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T, T2>>;

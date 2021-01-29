@@ -31,7 +31,7 @@ export abstract class AbstractModelService<T = any, T2 = any> implements ModelSe
   }
 
   // noinspection JSUnusedLocalSymbols
-  public async delete(options: ModelServiceArgs): Promise<ModelServiceDeleteResult | ModelServicePatchResult> {
+  public async delete(options: ModelServiceArgs): Promise<ModelServiceDeleteResult | ModelServicePatchResult<T, T2>> {
     throw new MethodNotImplementedError("Method not implemented.");
   }
 }

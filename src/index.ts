@@ -3,7 +3,7 @@ import {
   Logger,
   MethodNotImplementedError,
 } from "@miqro/core";
-import { getResults, Handler, NextCallback, NextHandler, setResults } from "@miqro/handlers";
+import { getResults, Handler, NextCallback, NextHandler, setResults, ParseResultsHandlerOptions } from "@miqro/handlers";
 import { ModelServiceArgs, ModelServiceInterface } from "./service";
 
 export * from "./audit";
@@ -60,3 +60,11 @@ export const ModelHandler = (service: ModelServiceInterface, logger?: Logger): N
     }
   }, logger);
 };
+
+export const IdModelMapper = (logger?: Logger): NextCallback => MapModelHandler(({ id }) => {
+  return { id };
+}, logger);
+
+export const CountModelMapper = (logger?: Logger): NextCallback => MapModelHandler((item: any) => {
+  return { count: item.count };
+}, logger);
