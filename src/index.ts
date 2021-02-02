@@ -1,9 +1,8 @@
 import {
-  getLogger,
   Logger,
   MethodNotImplementedError,
 } from "@miqro/core";
-import { getResults, Handler, NextCallback, NextHandler, setResults, ParseResultsHandlerOptions } from "@miqro/handlers";
+import { getResults, Handler, NextCallback, NextHandler, setResults } from "@miqro/handlers";
 import { ModelServiceArgs, ModelServiceInterface } from "./service";
 
 export * from "./audit";
@@ -37,10 +36,10 @@ export const MapModelHandler = (callbackfn: (value: any, index: number, array: a
       setResults(req, mappedResults);
       next();
     }
-  },);
+  });
 };
 
-export const ModelHandler = (service: ModelServiceInterface): NextCallback => {
+export const ModelHandler = (service: ModelServiceInterface, logger?: Logger): NextCallback => {
   return Handler(async (req) => {
     switch (req.method.toUpperCase()) {
       case "GET":
@@ -56,7 +55,7 @@ export const ModelHandler = (service: ModelServiceInterface): NextCallback => {
       default:
         throw new MethodNotImplementedError(`${req.method}`);
     }
-  });
+  }, logger);
 };
 
 export const IdModelMapper = (): NextCallback => MapModelHandler(({ id }) => {
