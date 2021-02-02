@@ -10,8 +10,7 @@ export * from "./audit";
 
 export * from "./service";
 
-export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any, logger?: Logger): NextCallback => {
-  logger = logger ? logger : getLogger("MapModelHandler");
+export const MapModelHandler = (callbackfn: (value: any, index: number, array: any[], req: any) => any): NextCallback => {
   return NextHandler(async (req, res, next) => {
     const results = getResults(req);
     if (results) {
@@ -38,11 +37,10 @@ export const MapModelHandler = (callbackfn: (value: any, index: number, array: a
       setResults(req, mappedResults);
       next();
     }
-  }, logger);
+  },);
 };
 
-export const ModelHandler = (service: ModelServiceInterface, logger?: Logger): NextCallback => {
-  logger = logger ? logger : getLogger("ModelHandler");
+export const ModelHandler = (service: ModelServiceInterface): NextCallback => {
   return Handler(async (req) => {
     switch (req.method.toUpperCase()) {
       case "GET":
@@ -58,13 +56,13 @@ export const ModelHandler = (service: ModelServiceInterface, logger?: Logger): N
       default:
         throw new MethodNotImplementedError(`${req.method}`);
     }
-  }, logger);
+  });
 };
 
-export const IdModelMapper = (logger?: Logger): NextCallback => MapModelHandler(({ id }) => {
+export const IdModelMapper = (): NextCallback => MapModelHandler(({ id }) => {
   return { id };
-}, logger);
+});
 
-export const CountModelMapper = (logger?: Logger): NextCallback => MapModelHandler((item: any) => {
+export const CountModelMapper = (): NextCallback => MapModelHandler((item: any) => {
   return { count: item.count };
-}, logger);
+});
