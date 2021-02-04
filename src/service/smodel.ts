@@ -1,16 +1,16 @@
 import { AbstractModelService } from "./amodel";
 import {
-  attributeParseOption,
-  groupParseOption,
+  ATTIBUTE_PARSE_OPTIONS,
+  GROUP_PARSE_OPTIONS,
   ModelServiceArgs,
   ModelServiceDeleteResult,
   ModelServiceGetResult,
   ModelServiceOptions,
   ModelServicePatchResult,
   ModelServicePostResult,
-  orderParseOption,
-  paginationParseOption,
-  searchParseOption
+  ORDER_PARSE_OPTIONS,
+  PAGINATION_PARSE_OPTIONS,
+  SEARCH_PARSE_OPTIONS
 } from "./model";
 
 import {
@@ -33,20 +33,20 @@ export class ModelService<T = any, T2 = any> extends AbstractModelService<T, T2>
 
     this.getQueryParseOptions = [];
     if (!options) {
-      this.getQueryParseOptions = this.getQueryParseOptions.concat(paginationParseOption);
+      this.getQueryParseOptions = this.getQueryParseOptions.concat(PAGINATION_PARSE_OPTIONS());
     } else {
+      this.getQueryParseOptions = this.getQueryParseOptions.concat(PAGINATION_PARSE_OPTIONS(options.paginationOptions));
       if (options.orderColumnsValues) {
-        this.getQueryParseOptions.push(orderParseOption(options.orderColumnsValues));
+        this.getQueryParseOptions = this.getQueryParseOptions.concat(ORDER_PARSE_OPTIONS(options.orderColumnsValues));
       }
-      this.getQueryParseOptions = this.getQueryParseOptions.concat(paginationParseOption);
       if (options.attributeValues) {
-        this.getQueryParseOptions.push(attributeParseOption(options.attributeValues));
+        this.getQueryParseOptions = this.getQueryParseOptions.concat(ATTIBUTE_PARSE_OPTIONS(options.attributeValues));
       }
       if (options.groupColumnsValues) {
-        this.getQueryParseOptions.push(groupParseOption(options.groupColumnsValues));
+        this.getQueryParseOptions = this.getQueryParseOptions.concat(GROUP_PARSE_OPTIONS(options.groupColumnsValues));
       }
       if (options.searchColumnsValues) {
-        this.getQueryParseOptions = this.getQueryParseOptions.concat(searchParseOption(options.searchColumnsValues));
+        this.getQueryParseOptions = this.getQueryParseOptions.concat(SEARCH_PARSE_OPTIONS(options.searchColumnsValues));
       }
     }
   }

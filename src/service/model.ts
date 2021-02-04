@@ -1,4 +1,4 @@
-import { ParseOption, Session, SimpleMap, SimpleTypes } from "@miqro/core";
+import { NoNameParseOption, ParseOption, parseOptionMap2ParseOptionList, Session, SimpleMap, SimpleTypes } from "@miqro/core";
 
 import { Includeable, IncludeOptions, Model, ModelCtor, Transaction, WhereOptions } from "sequelize";
 
@@ -38,68 +38,111 @@ export interface ModelServiceOptions {
     all: true;
     nested?: true | undefined;
   } | Includeable[];
+  paginationOptions?: {
+    maxLimit: number;
+    defaultLimit: number;
+  }
 }
 
 // ?group=name&group=bla
-export const groupParseOption = (groupColumns: string[]): ParseOption => {
+export const GROUP_PARSE_OPTION_MAP = (groupColumns: string[]): SimpleMap<NoNameParseOption> => {
   return {
-    name: "group", type: "array", arrayType: "enum", enumValues: groupColumns, arrayMinLength: 1, required: false,
-    forceArray: true,
-    description: "a list of attributes by which the operation will be group by"
-  };
+    group: {
+      type: "array",
+      required: false,
+      arrayType: "enum",
+      enumValues: groupColumns,
+      arrayMinLength: 1,
+      forceArray: true,
+      description: "a list of attributes by which the operation will be group by"
+    }
+  }
 };
+export const GROUP_PARSE_OPTIONS = (groupColumns: string[]): ParseOption[] =>
+  parseOptionMap2ParseOptionList(GROUP_PARSE_OPTION_MAP(groupColumns));
 
 // ?attributes=id&attributes=sum,amount,total
-export const attributeParseOption = (attributeValues: string[]): ParseOption => {
+export const ATTIBUTE_PARSE_OPTION_MAP = (attributeValues: string[]): SimpleMap<NoNameParseOption> => {
   return {
-    name: "attributes", type: "array", arrayType: "enum", enumValues: attributeValues, arrayMinLength: 1, required: false,
-    forceArray: true,
-    description: "a list of attributes that the operation will try to obtain"
-  };
+    attributes: {
+      type: "array",
+      required: false,
+      arrayType: "enum",
+      enumValues: attributeValues,
+      arrayMinLength: 1,
+      forceArray: true,
+      description: "a list of attributes that the operation will try to obtain"
+    }
+  }
 };
+export const ATTIBUTE_PARSE_OPTIONS = (attributeValues: string[]): ParseOption[] =>
+  parseOptionMap2ParseOptionList(ATTIBUTE_PARSE_OPTION_MAP(attributeValues));
+
+export const DEFAULT_PAGINATION_OPTIONS = {
+  maxLimit: 150,
+  defaultLimit: 10
+}
 
 // ?limit=10&offset=0
-export const paginationParseOption: ParseOption[] = [
-  {
-    name: "limit", type: "number", required: false,
-    defaultValue: 10,
-    numberMax: 150,
-    numberMin: 0,
-    description: "the limit of number of results for the operation"
-  },
-  {
-    name: "offset", type: "number", required: false,
-    defaultValue: 0,
-    numberMin: 0,
-    description: "the offset for the results for the operation"
-  }
-];
+export const PAGINATION_PARSE_OPTION_MAP = ({ defaultLimit, maxLimit } = DEFAULT_PAGINATION_OPTIONS): SimpleMap<NoNameParseOption> => {
+  return {
+    limit: {
+      type: "number",
+      required: false,
+      defaultValue: defaultLimit,
+      numberMax: maxLimit,
+      numberMin: 0,
+      description: "the limit of number of results for the operation"
+    },
+    offset: {
+      type: "number",
+      required: false,
+      defaultValue: 0,
+      numberMin: 0,
+      description: "the offset for the results for the operation"
+    }
+  };
+};
+export const PAGINATION_PARSE_OPTIONS = (options = DEFAULT_PAGINATION_OPTIONS): ParseOption[] =>
+  parseOptionMap2ParseOptionList(PAGINATION_PARSE_OPTION_MAP(options));
 
 // ?columns=name&columns=age&q=text
-export const searchParseOption: (searchColumns: string[]) => ParseOption[] = (searchColumns: string[]) => [
-  {
-    name: "columns", type: "array", arrayType: "enum", enumValues: searchColumns, arrayMinLength: 1, required: false,
-    forceArray: true,
-    description: "the columns by which the operation will be filtered using the req.query.q"
-  },
-  {
-    name: "q", type: "string", required: false,
-    description: "the value by which the operation will be filtered using req.query.columns"
+export const SEARCH_PARSE_OPTION_MAP = (searchColumns: string[]): SimpleMap<NoNameParseOption> => {
+  return {
+    columns: {
+      type: "array",
+      required: false,
+      arrayType: "enum",
+      enumValues: searchColumns,
+      arrayMinLength: 1,
+      forceArray: true,
+      description: "the columns by which the operation will be filtered using the req.query.q"
+    },
+    q: {
+      type: "string",
+      required: false,
+      description: "the value by which the operation will be filtered using req.query.columns"
+    }
   }
-];
+};
+export const SEARCH_PARSE_OPTIONS: (searchColumns: string[]) => ParseOption[] = (searchColumns: string[]) =>
+  parseOptionMap2ParseOptionList(SEARCH_PARSE_OPTION_MAP(searchColumns));
 
 // ?order=name,DESC&order=age,ASC
-export const orderParseOption = (orderColumns: string[]): ParseOption => {
+export const ORDER_PARSE_OPTION_MAP = (orderColumns: string[]): SimpleMap<NoNameParseOption> => {
   let enumValues = orderColumns.map(c => `${c},DESC`);
   enumValues = enumValues.concat(orderColumns.map(c => `${c},ASC`));
   return {
-    name: "order",
-    type: "array",
-    forceArray: true,
-    arrayMinLength: 1,
-    arrayType: "enum",
-    enumValues,
-    required: false,
-    description: "a list of ATTRIBUTE,DESC or ATTRIBUTE,ASC that will alter the order result of the operation"
-  };
+    order: {
+      type: "array",
+      forceArray: true,
+      arrayMinLength: 1,
+      arrayType: "enum",
+      enumValues,
+      required: false,
+      description: "a list of ATTRIBUTE,DESC or ATTRIBUTE,ASC that will alter the order result of the operation"
+    }
+  }
 };
+export const ORDER_PARSE_OPTIONS = (orderColumns: string[]): ParseOption[] =>
+  parseOptionMap2ParseOptionList(ORDER_PARSE_OPTION_MAP(orderColumns));
