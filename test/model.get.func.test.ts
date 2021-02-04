@@ -43,7 +43,7 @@ describe("ModelService Func Tests", function () {
     (async () => {
       const service = new ModelService(models.post,
         {
-          attributeQueryValues: ["name", "sum,amount,total"],
+          attributeValues: ["name", "sum,amount,total"],
           groupColumnsValues: ["name"],
           orderColumnsValues: ["name"]
         });
@@ -78,7 +78,7 @@ describe("ModelService Func Tests", function () {
   it("case 1 get sum group by name", (done) => {
     (async () => {
       const service = new ModelService(models.post, {
-        attributeQueryValues: ["name", "sum,amount,total"],
+        attributeValues: ["name", "sum,amount,total"],
         groupColumnsValues: ["name"],
         orderColumnsValues: ["name"]
       });
@@ -106,7 +106,7 @@ describe("ModelService Func Tests", function () {
   it("case 1 get sum", (done) => {
     (async () => {
       const service = new ModelService(models.post, {
-        attributeQueryValues: ["name", "sum,amount,total"]
+        attributeValues: ["name", "sum,amount,total"]
       });
       const result = await service.get({
         params: {},

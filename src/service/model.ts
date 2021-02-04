@@ -33,7 +33,7 @@ export interface ModelServiceOptions {
   orderColumnsValues?: string[];
   searchColumnsValues?: string[];
   groupColumnsValues?: string[];
-  attributeQueryValues?: string[];
+  attributeValues?: string[];
   include?: IncludeOptions | {
     all: true;
     nested?: true | undefined;
@@ -50,9 +50,9 @@ export const groupParseOption = (groupColumns: string[]): ParseOption => {
 };
 
 // ?attributes=id&attributes=sum,amount,total
-export const attributeParseOption = (attributesQueryValues: string[]): ParseOption => {
+export const attributeParseOption = (attributeValues: string[]): ParseOption => {
   return {
-    name: "attribute", type: "array", arrayType: "string", arrayMinLength: 1, required: false,
+    name: "attribute", type: "array", arrayType: "enum", enumValues: attributeValues, arrayMinLength: 1, required: false,
     forceArray: true,
     description: "a list of attributes that the operation will try to obtain"
   };

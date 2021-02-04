@@ -39,8 +39,8 @@ export class ModelService<T = any, T2 = any> extends AbstractModelService<T, T2>
         this.getQueryParseOptions.push(orderParseOption(options.orderColumnsValues));
       }
       this.getQueryParseOptions = this.getQueryParseOptions.concat(paginationParseOption);
-      if (options.attributeQueryValues) {
-        this.getQueryParseOptions.push(attributeParseOption(options.attributeQueryValues));
+      if (options.attributeValues) {
+        this.getQueryParseOptions.push(attributeParseOption(options.attributeValues));
       }
       if (options.groupColumnsValues) {
         this.getQueryParseOptions.push(groupParseOption(options.groupColumnsValues));
