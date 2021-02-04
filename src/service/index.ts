@@ -3,3 +3,4 @@ export * from "./smodel";
 export * from "./amodel";
 export * from "./deleted";
 export * from "./account";
+export * from "./ckaccount";
