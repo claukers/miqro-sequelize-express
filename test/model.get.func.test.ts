@@ -50,7 +50,7 @@ describe("ModelService Func Tests", function () {
       const result = await service.get({
         params: {},
         query: {
-          attribute: ["name", "sum,amount,total"],
+          attributes: ["name", "sum,amount,total"],
           group: "name",
           limit: 10,
           offset: 1,
@@ -85,7 +85,7 @@ describe("ModelService Func Tests", function () {
       const result = await service.get({
         params: {},
         query: {
-          attribute: ["name", "sum,amount,total"],
+          attributes: ["name", "sum,amount,total"],
           group: ["name"],
           order: ["name,DESC"]
         },
@@ -111,7 +111,7 @@ describe("ModelService Func Tests", function () {
       const result = await service.get({
         params: {},
         query: {
-          attribute: ["name", "sum,amount,total"]
+          attributes: ["name", "sum,amount,total"]
         },
         body: {}
       });
@@ -214,7 +214,7 @@ describe("ModelService Func Tests", function () {
           limit: 10,
           offset: 0,
           q: "email3",
-          column: ["email", "name"],
+          columns: ["email", "name"],
           order: ["createdAt,DESC"]
         },
         body: {}
@@ -242,7 +242,7 @@ describe("ModelService Func Tests", function () {
           limit: 10,
           offset: 0,
           q: "20",
-          column: ["amount"],
+          columns: ["amount"],
           order: ["createdAt,DESC"]
         },
         body: {}
@@ -339,13 +339,13 @@ describe("ModelService Func Tests", function () {
             limit: 10,
             offset: 0,
             q: "email3",
-            column: ["email", "name"],
+            columns: ["email", "name"],
             order: ["createdAt,DESC"]
           },
           body: {}
         });
       } catch (e) {
-        strictEqual(e.message, "query.column not array1: of enum as defined. valid values [name]");
+        strictEqual(e.message, "query.columns not array1: of enum as defined. valid values [name]");
       }
     })().then(done).catch(done);
   });
@@ -365,7 +365,7 @@ describe("ModelService Func Tests", function () {
           limit: 10,
           offset: 0,
           q: "email3",
-          column: ["email"],
+          columns: ["email"],
           order: ["createdAt,DESC"]
         },
         body: {}

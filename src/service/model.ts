@@ -52,7 +52,7 @@ export const groupParseOption = (groupColumns: string[]): ParseOption => {
 // ?attributes=id&attributes=sum,amount,total
 export const attributeParseOption = (attributeValues: string[]): ParseOption => {
   return {
-    name: "attribute", type: "array", arrayType: "enum", enumValues: attributeValues, arrayMinLength: 1, required: false,
+    name: "attributes", type: "array", arrayType: "enum", enumValues: attributeValues, arrayMinLength: 1, required: false,
     forceArray: true,
     description: "a list of attributes that the operation will try to obtain"
   };
@@ -78,7 +78,7 @@ export const paginationParseOption: ParseOption[] = [
 // ?columns=name&columns=age&q=text
 export const searchParseOption: (searchColumns: string[]) => ParseOption[] = (searchColumns: string[]) => [
   {
-    name: "column", type: "array", arrayType: "enum", enumValues: searchColumns, arrayMinLength: 1, required: false,
+    name: "columns", type: "array", arrayType: "enum", enumValues: searchColumns, arrayMinLength: 1, required: false,
     forceArray: true,
     description: "the columns by which the operation will be filtered using the req.query.q"
   },
