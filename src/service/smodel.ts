@@ -1,6 +1,6 @@
 import { AbstractModelService } from "./amodel";
 import {
-  attributesParseOption,
+  attributeParseOption,
   groupParseOption,
   ModelServiceArgs,
   ModelServiceDeleteResult,
@@ -23,8 +23,6 @@ import {
   WhereOptions
 } from "sequelize";
 
-import { parseQueryOptions } from "@miqro/handlers";
-
 import { ParseOption, parseOptions, ParseOptionsError } from "@miqro/core";
 
 export class ModelService<T = any, T2 = any> extends AbstractModelService<T, T2> {
@@ -36,32 +34,26 @@ export class ModelService<T = any, T2 = any> extends AbstractModelService<T, T2>
     this.getQueryParseOptions = [];
     if (!options) {
       this.getQueryParseOptions = this.getQueryParseOptions.concat(paginationParseOption);
-      this.getQueryParseOptions.push(orderParseOption);
-      this.getQueryParseOptions.push(attributesParseOption);
-      this.getQueryParseOptions.push(groupParseOption);
-      this.getQueryParseOptions = this.getQueryParseOptions.concat(searchParseOption(undefined));
     } else {
-      if (!options.disableOrderQuery) {
-        this.getQueryParseOptions.push(orderParseOption);
+      if (options.orderColumnsValues) {
+        this.getQueryParseOptions.push(orderParseOption(options.orderColumnsValues));
       }
-      if (!options.disablePaginationQuery) {
-        this.getQueryParseOptions = this.getQueryParseOptions.concat(paginationParseOption);
+      this.getQueryParseOptions = this.getQueryParseOptions.concat(paginationParseOption);
+      if (options.attributeQueryValues) {
+        this.getQueryParseOptions.push(attributeParseOption(options.attributeQueryValues));
       }
-      if (!options.disableAttributesQuery) {
-        this.getQueryParseOptions.push(attributesParseOption);
+      if (options.groupColumnsValues) {
+        this.getQueryParseOptions.push(groupParseOption(options.groupColumnsValues));
       }
-      if (!options.disableGroupQuery) {
-        this.getQueryParseOptions.push(groupParseOption);
-      }
-      if (!options.disableSearchQuery) {
-        this.getQueryParseOptions = this.getQueryParseOptions.concat(searchParseOption(options ? options.searchColumns : undefined));
+      if (options.searchColumnsValues) {
+        this.getQueryParseOptions = this.getQueryParseOptions.concat(searchParseOption(options.searchColumnsValues));
       }
     }
   }
 
   public async get({ body, query, params }: ModelServiceArgs, transaction?: Transaction, skipLocked?: boolean): Promise<ModelServiceGetResult<T, T2>> {
     parseOptions("body", body, [], "no_extra");
-    const { limit, offset, columns, q, order, attributes, group } = parseQueryOptions("query", query, this.getQueryParseOptions, "add_extra");
+    const { limit, offset, column, q, order, attribute, group } = parseOptions("query", query, this.getQueryParseOptions, "no_extra", true);
     if (offset !== undefined && limit === undefined) {
       throw new ParseOptionsError(`query.limit needed for query.offset`);
     }
@@ -70,30 +62,30 @@ export class ModelService<T = any, T2 = any> extends AbstractModelService<T, T2>
       throw new ParseOptionsError(`query.offset needed for query.limit`);
     }
 
-    if (columns === undefined && q !== undefined) {
-      throw new ParseOptionsError(`query.searchColumns needed for query.searchQuery`);
+    if (column === undefined && q !== undefined) {
+      throw new ParseOptionsError(`query.column needed for query.q`);
     }
 
-    if (attributes) {
-      for (let i = 0; i < (attributes as string[]).length; i++) {
-        const attribute = (attributes as string[])[i];
-        const fn = attribute.split(",").map(s => s.trim());
+    if (attribute) {
+      for (let i = 0; i < (attribute as string[]).length; i++) {
+        const att = (attribute as string[])[i];
+        const fn = att.split(",").map(s => s.trim());
         if (fn.length > 1) {
-          // attribute is a SequelizeFN not a column string
+          // att is a SequelizeFN not a column string
           if (fn.length !== 3) {
-            throw new ParseOptionsError(`query.attributes [${attribute}] not valid!`);
+            throw new ParseOptionsError(`query.attribute [${att}] not valid!`);
           }
           const [fnName, col, name] = fn;
-          parseOptions(`query.attributes`, { fn: fnName, col, name }, [
+          parseOptions(`query.attribute`, { fn: fnName, col, name }, [
             { name: "fn", type: "enum", enumValues: ["sum"], required: true },
             { name: "col", type: "string", required: true },
             { name: "name", type: "string", required: true }
           ], "no_extra");
 
           try {
-            (attributes as any[])[i] = [SequelizeFn(fnName, SequelizeCol(col as string)), name as string];
+            (attribute as any[])[i] = [SequelizeFn(fnName, SequelizeCol(col as string)), name as string];
           } catch (e) {
-            throw new ParseOptionsError(`bad query.attributes [${attribute}]`);
+            throw new ParseOptionsError(`bad query.attribute [${attribute}]`);
           }
         }
       }
@@ -107,10 +99,10 @@ export class ModelService<T = any, T2 = any> extends AbstractModelService<T, T2>
         }
       }
     }
-    if (q !== undefined && columns !== undefined && q !== "") {
+    if (q !== undefined && column !== undefined && q !== "") {
       const searchParams: any = {};
-      for (const column of (columns as string[])) {
-        searchParams[column] = {
+      for (const c of (column as string[])) {
+        searchParams[c] = {
           [SequelizeOp.or]: {
             [SequelizeOp.like]: "%" + q + "%",
             //[SequelizeOp.eq]: q
@@ -124,7 +116,7 @@ export class ModelService<T = any, T2 = any> extends AbstractModelService<T, T2>
     }
 
     return transaction ? this.model.findAndCountAll({
-      attributes: attributes as any,
+      attributes: attribute as any,
       where: params as any,
       order: order as any,
       include: this.options && this.options.include ? this.options.include : undefined,
@@ -136,7 +128,7 @@ export class ModelService<T = any, T2 = any> extends AbstractModelService<T, T2>
       lock: true,
       skipLocked
     }) : this.model.findAndCountAll({
-      attributes: attributes as any,
+      attributes: attribute as any,
       where: params as any,
       order: order as any,
       distinct: true,

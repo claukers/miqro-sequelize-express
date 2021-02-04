@@ -1,6 +1,6 @@
 import { ParseOption, Session, SimpleMap, SimpleTypes } from "@miqro/core";
 
-import { Model, ModelCtor, Transaction, WhereOptions } from "sequelize";
+import { Includeable, IncludeOptions, Model, ModelCtor, Transaction, WhereOptions } from "sequelize";
 
 export interface ModelServiceArgs {
   body: SimpleMap<SimpleTypes>;
@@ -29,47 +29,33 @@ export interface ModelServiceInterface<T = any, T2 = any> {
   delete(options: ModelServiceArgs, transaction?: Transaction): Promise<ModelServiceDeleteResult | ModelServicePatchResult>;
 }
 
-export type ModelServiceInclude<T = any> = {
-  model: ModelCtor<Model<T>>;
-  required?: boolean;
-  where?: WhereOptions,
-  include?: {
-    model: ModelCtor<Model<T>>;
-    required?: boolean;
-    where?: WhereOptions,
-    include?: {
-      model: ModelCtor<Model<T>>;
-      required?: boolean;
-      where?: WhereOptions,
-      include?: {
-        model: ModelCtor<Model<T>>;
-        required?: boolean;
-        where?: WhereOptions
-      }[]
-    }[]
-  }[]
-}[];
-
 export interface ModelServiceOptions {
-  searchColumns?: string[];
-  disableAttributesQuery?: boolean;
-  include?: ModelServiceInclude;
-  disableOrderQuery?: boolean;
-  disableGroupQuery?: boolean;
-  disablePaginationQuery?: boolean;
-  disableSearchQuery?: boolean;
+  orderColumnsValues?: string[];
+  searchColumnsValues?: string[];
+  groupColumnsValues?: string[];
+  attributeQueryValues?: string[];
+  include?: IncludeOptions | {
+    all: true;
+    nested?: true | undefined;
+  } | Includeable[];
 }
 
 // ?group=name&group=bla
-export const groupParseOption: ParseOption = {
-  name: "group", type: "array", arrayType: "string", arrayMinLength: 1, required: false,
-  description: "a list of attributes by which the operation will be group by"
+export const groupParseOption = (groupColumns: string[]): ParseOption => {
+  return {
+    name: "group", type: "array", arrayType: "enum", enumValues: groupColumns, arrayMinLength: 1, required: false,
+    forceArray: true,
+    description: "a list of attributes by which the operation will be group by"
+  };
 };
 
 // ?attributes=id&attributes=sum,amount,total
-export const attributesParseOption: ParseOption = {
-  name: "attributes", type: "array", arrayType: "string", arrayMinLength: 1, required: false,
-  description: "a list of attributes that the operation will try to obtain"
+export const attributeParseOption = (attributesQueryValues: string[]): ParseOption => {
+  return {
+    name: "attribute", type: "array", arrayType: "string", arrayMinLength: 1, required: false,
+    forceArray: true,
+    description: "a list of attributes that the operation will try to obtain"
+  };
 };
 
 // ?limit=10&offset=0
@@ -90,9 +76,10 @@ export const paginationParseOption: ParseOption[] = [
 ];
 
 // ?columns=name&columns=age&q=text
-export const searchParseOption: (searchColumns?: string[]) => ParseOption[] = (searchColumns?: string[]) => [
+export const searchParseOption: (searchColumns: string[]) => ParseOption[] = (searchColumns: string[]) => [
   {
-    name: "columns", type: "array", arrayType: searchColumns ? "enum" : "string", enumValues: searchColumns, arrayMinLength: 1, required: false,
+    name: "column", type: "array", arrayType: "enum", enumValues: searchColumns, arrayMinLength: 1, required: false,
+    forceArray: true,
     description: "the columns by which the operation will be filtered using the req.query.q"
   },
   {
@@ -102,11 +89,17 @@ export const searchParseOption: (searchColumns?: string[]) => ParseOption[] = (s
 ];
 
 // ?order=name,DESC&order=age,ASC
-export const orderParseOption: ParseOption = {
-  name: "order",
-  type: "array",
-  arrayMinLength: 1,
-  arrayType: "string",
-  required: false,
-  description: "a list of ATTRIBUTE,DESC or ATTRIBUTE,ASC that will alter the order result of the operation"
+export const orderParseOption = (orderColumns: string[]): ParseOption => {
+  let enumValues = orderColumns.map(c => `${c},DESC`);
+  enumValues = enumValues.concat(orderColumns.map(c => `${c},ASC`));
+  return {
+    name: "order",
+    type: "array",
+    forceArray: true,
+    arrayMinLength: 1,
+    arrayType: "enum",
+    enumValues,
+    required: false,
+    description: "a list of ATTRIBUTE,DESC or ATTRIBUTE,ASC that will alter the order result of the operation"
+  };
 };

@@ -5,11 +5,13 @@ this module provides express handlers for exposing **sequelize** models.
 mapping http request to the ``Sequelize.ModelCtor<Model<...>>`` corresponding findbyPK, findALl, findAllAndCount, create, createBulk, update and delete.
 
 
-##### ModelHandler(model, [options])
+### ModelHandler(model, [options])
 
 ```javascript
 ...
-const postService = new ModelService(models.post, ...);
+const postService = new ModelService(models.post, {
+  ...options
+});
 ...
 app.get("/post/:id?", [ // all req.params like the optional :id in this example will be mapped as a WhereOptions from sequelize.
   ModelHandler(postService), 
@@ -20,53 +22,61 @@ app.use(ErrorHandler(...)); // this will catch some sequelize errors and return 
 ...
 ```
 
-###### options
+### options
 ```javascript
-{
-disableAttributesQuery: false, // disable req.query.attributes
-include: {
-...
-},
-disableOrderQuery: false, // disable req.query.order
-disableGroupQuery: false, // disable req.query.group
-disablePaginationQuery: false, // disable req.query.limit and req.query.offset
-disableSearchQuery: false // disable req.query.q and req.query.columns
-}
+  orderColumnsValues?: string[];
+  searchColumnsValues?: string[];
+  groupColumnsValues?: string[];
+  attributeQueryValues?: string[];
+  include?: IncludeOptions | {
+    all: true;
+    nested?: true | undefined;
+  } | Includeable[];
 ```
 
-##### [OPTIONAL] query params
+#### [OPTIONAL] query params
 
-###### pagination
+##### pagination
 
 ```
 ?limit=10&offset=0
 ```
 
-###### search by like
+defaults to limit=150&offset=0
+
+##### search by like
+
+**to use option.searchColumnsValues must be passed**
 
 ```
 ?columns=name&columns=age&q=text
 ```
 
-###### order
+##### order
+
+**to use option.orderColumnsValues must be passed**
 
 ```
 ?order=name,DESC&order=age,ASC
 ```
 
-###### group by
+##### group by
+
+**to use option.groupColumnsValues must be passed**
 
 ```
 ?group=name&group=age
 ```
 
-###### attributes
+##### attributes
+
+**to use option.attributeQueryValues must be passed**
 
 ```
 ?attributes=id&attributes=sum,amount,total
 ```
 
-##### MapModelHandler(...)
+### MapModelHandler(...)
 
 ```javascript
 ...

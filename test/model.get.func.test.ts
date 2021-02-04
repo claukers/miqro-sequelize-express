@@ -3,6 +3,7 @@ import { Database } from "@miqro/database";
 import { strictEqual } from "assert";
 import { describe, it } from "mocha";
 import { resolve } from "path";
+import { inspect } from "util";
 import { FakeDeleteModelService, MapModelHandler, ModelService } from "../src";
 
 process.env.NODE_ENV = "test";
@@ -16,13 +17,15 @@ describe("ModelService Func Tests", function () {
   this.timeout(100000);
   it("case 1 get with pagination and order  but no params 1 with getDB", (done) => {
     (async () => {
-      const service = new ModelService(models.post);
+      const service = new ModelService(models.post, {
+        orderColumnsValues: ["createdAt"]
+      });
       const result = await service.get({
         params: {},
         query: {
           limit: 2,
           offset: 1,
-          order: [" createdAt , DESC"]
+          order: ["createdAt,DESC"]
         },
         body: {}
       });
@@ -38,18 +41,24 @@ describe("ModelService Func Tests", function () {
 
   it("case 1 get sum group by name with pagination using fixqueryarrays", (done) => {
     (async () => {
-      const service = new ModelService(models.post);
+      const service = new ModelService(models.post,
+        {
+          attributeQueryValues: ["name", "sum,amount,total"],
+          groupColumnsValues: ["name"],
+          orderColumnsValues: ["name"]
+        });
       const result = await service.get({
         params: {},
         query: {
-          attributes: ["name", "sum,amount,total"],
+          attribute: ["name", "sum,amount,total"],
           group: "name",
           limit: 10,
           offset: 1,
-          order: "name, DESC"
+          order: "name,DESC"
         },
         body: {}
       });
+      console.log(inspect(result));
       if (!(result instanceof Array)) {
         if (result.count instanceof Array) {
           strictEqual(result.count.length, 3);
@@ -68,13 +77,17 @@ describe("ModelService Func Tests", function () {
 
   it("case 1 get sum group by name", (done) => {
     (async () => {
-      const service = new ModelService(models.post);
+      const service = new ModelService(models.post, {
+        attributeQueryValues: ["name", "sum,amount,total"],
+        groupColumnsValues: ["name"],
+        orderColumnsValues: ["name"]
+      });
       const result = await service.get({
         params: {},
         query: {
-          attributes: ["name", "sum,amount,total"],
+          attribute: ["name", "sum,amount,total"],
           group: ["name"],
-          order: ["name, DESC"]
+          order: ["name,DESC"]
         },
         body: {}
       });
@@ -92,11 +105,13 @@ describe("ModelService Func Tests", function () {
 
   it("case 1 get sum", (done) => {
     (async () => {
-      const service = new ModelService(models.post);
+      const service = new ModelService(models.post, {
+        attributeQueryValues: ["name", "sum,amount,total"]
+      });
       const result = await service.get({
         params: {},
         query: {
-          attributes: ["name", "sum,amount,total"]
+          attribute: ["name", "sum,amount,total"]
         },
         body: {}
       });
@@ -114,13 +129,15 @@ describe("ModelService Func Tests", function () {
 
   it("deleted happy path", (done) => {
     (async () => {
-      const service = new FakeDeleteModelService(models.post2);
+      const service = new FakeDeleteModelService(models.post2, {
+        orderColumnsValues: ["createdAt"]
+      });
       const result = await service.get({
         params: {},
         query: {
           limit: 2,
           offset: 0,
-          order: ["createdAt, DESC"]
+          order: ["createdAt,DESC"]
         },
         body: {}
       });
@@ -136,13 +153,15 @@ describe("ModelService Func Tests", function () {
 
   it("case 1 get with pagination and order  but no params 1", (done) => {
     (async () => {
-      const service = new ModelService(models.post);
+      const service = new ModelService(models.post, {
+        orderColumnsValues: ["createdAt"]
+      });
       const result = await service.get({
         params: {},
         query: {
           limit: "2",
           offset: "1",
-          order: ["createdAt, DESC"]
+          order: ["createdAt,DESC"]
         },
         body: {}
       });
@@ -158,7 +177,9 @@ describe("ModelService Func Tests", function () {
 
   it("case 2 get with pagination and order and params 1", (done) => {
     (async () => {
-      const service = new ModelService(models.post);
+      const service = new ModelService(models.post, {
+        orderColumnsValues: ["createdAt"]
+      });
       const result = await service.get({
         params: {
           name: "user2"
@@ -166,7 +187,7 @@ describe("ModelService Func Tests", function () {
         query: {
           limit: 10,
           offset: 0,
-          order: ["createdAt, DESC"]
+          order: ["createdAt,DESC"]
         },
         body: {}
       });
@@ -181,7 +202,10 @@ describe("ModelService Func Tests", function () {
 
   it("case 2 get with pagination and order and params 1 and search query", (done) => {
     (async () => {
-      const service = new ModelService(models.post);
+      const service = new ModelService(models.post, {
+        searchColumnsValues: ["email", "name"],
+        orderColumnsValues: ["createdAt"]
+      });
       const result = await service.get({
         params: {
           name: "user2"
@@ -190,8 +214,8 @@ describe("ModelService Func Tests", function () {
           limit: 10,
           offset: 0,
           q: "email3",
-          columns: ["email", "name"],
-          order: ["createdAt, DESC"]
+          column: ["email", "name"],
+          order: ["createdAt,DESC"]
         },
         body: {}
       });
@@ -206,7 +230,10 @@ describe("ModelService Func Tests", function () {
 
   it("case 2 get with pagination and order and params 1 and search query as number", (done) => {
     (async () => {
-      const service = new ModelService(models.post);
+      const service = new ModelService(models.post, {
+        searchColumnsValues: ["amount"],
+        orderColumnsValues: ["createdAt"]
+      });
       const result = await service.get({
         params: {
           name: "user2"
@@ -215,8 +242,8 @@ describe("ModelService Func Tests", function () {
           limit: 10,
           offset: 0,
           q: "20",
-          columns: ["amount"],
-          order: ["createdAt, DESC"]
+          column: ["amount"],
+          order: ["createdAt,DESC"]
         },
         body: {}
       });
@@ -231,7 +258,9 @@ describe("ModelService Func Tests", function () {
 
   it("case 2 get with pagination and order and params 2", (done) => {
     (async () => {
-      const service = new ModelService(models.post);
+      const service = new ModelService(models.post, {
+        orderColumnsValues: ["createdAt"]
+      });
       const result = await service.get({
         params: {
           email: "email1"
@@ -239,7 +268,7 @@ describe("ModelService Func Tests", function () {
         query: {
           limit: 10,
           offset: 0,
-          order: ["createdAt, DESC"]
+          order: ["createdAt,DESC"]
         },
         body: {}
       });
@@ -254,7 +283,9 @@ describe("ModelService Func Tests", function () {
 
   it("case 2 get with pagination and order and params 2 and mapping", (done) => {
     (async () => {
-      const service = new ModelService(models.post);
+      const service = new ModelService(models.post, {
+        orderColumnsValues: ["createdAt"]
+      });
       const req: any = { results: [] };
       const result = await service.get({
         params: {
@@ -263,7 +294,7 @@ describe("ModelService Func Tests", function () {
         query: {
           limit: 10,
           offset: 0,
-          order: ["createdAt, DESC"]
+          order: ["createdAt,DESC"]
         },
         body: {}
       });
@@ -296,7 +327,8 @@ describe("ModelService Func Tests", function () {
   it("case 2 get with pagination and order and params 1 and search query with column limit", (done) => {
     (async () => {
       const service = new ModelService(models.post, {
-        searchColumns: ["name"]
+        searchColumnsValues: ["name"],
+        orderColumnsValues: ["createdAt"]
       });
       try {
         await service.get({
@@ -307,13 +339,13 @@ describe("ModelService Func Tests", function () {
             limit: 10,
             offset: 0,
             q: "email3",
-            columns: ["email", "name"],
-            order: ["createdAt, DESC"]
+            column: ["email", "name"],
+            order: ["createdAt,DESC"]
           },
           body: {}
         });
       } catch (e) {
-        strictEqual(e.message, "query.columns not array1: of enum as defined. valid values [name]");
+        strictEqual(e.message, "query.column not array1: of enum as defined. valid values [name]");
       }
     })().then(done).catch(done);
   });
@@ -321,7 +353,8 @@ describe("ModelService Func Tests", function () {
   it("case 2 get with pagination and order and params 1 and search query with column limit happy path", (done) => {
     (async () => {
       const service = new ModelService(models.post, {
-        searchColumns: ["email"]
+        searchColumnsValues: ["email"],
+        orderColumnsValues: ["createdAt"]
       });
 
       const result = await service.get({
@@ -332,8 +365,8 @@ describe("ModelService Func Tests", function () {
           limit: 10,
           offset: 0,
           q: "email3",
-          columns: ["email"],
-          order: ["createdAt, DESC"]
+          column: ["email"],
+          order: ["createdAt,DESC"]
         },
         body: {}
       });
