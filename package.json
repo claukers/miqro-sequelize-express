@@ -23,7 +23,7 @@
   "dependencies": {
     "@miqro/core": "^0.9.19",
     "@miqro/database": "^0.9.10",
-    "@miqro/handlers": "^0.9.15",
+    "@miqro/handlers": "^0.9.16",
     "sequelize": "^6.5.0"
   },
   "devDependencies": {
