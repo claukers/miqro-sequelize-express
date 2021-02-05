@@ -1,6 +1,6 @@
-import { NoNameParseOption, ParseOption, parseOptionMap2ParseOptionList, Session, SimpleMap, SimpleTypes } from "@miqro/core";
+import { ParseOption, ParseOptionMap, parseOptionMap2ParseOptionList, Session, SimpleMap, SimpleTypes } from "@miqro/core";
 
-import { Includeable, IncludeOptions, Model, ModelCtor, Transaction, WhereOptions } from "sequelize";
+import { Includeable, IncludeOptions, Model, Transaction } from "sequelize";
 
 export interface ModelServiceArgs {
   body: SimpleMap<SimpleTypes>;
@@ -45,7 +45,7 @@ export interface ModelServiceOptions {
 }
 
 // ?group=name&group=bla
-export const GROUP_PARSE_OPTION_MAP = (groupColumns: string[]): SimpleMap<NoNameParseOption> => {
+export const GROUP = (groupColumns: string[]): ParseOptionMap => {
   return {
     group: {
       type: "array",
@@ -58,11 +58,11 @@ export const GROUP_PARSE_OPTION_MAP = (groupColumns: string[]): SimpleMap<NoName
     }
   }
 };
-export const GROUP_PARSE_OPTIONS = (groupColumns: string[]): ParseOption[] =>
-  parseOptionMap2ParseOptionList(GROUP_PARSE_OPTION_MAP(groupColumns));
+export const GROUP_OPTIONS = (groupColumns: string[]): ParseOption[] =>
+  parseOptionMap2ParseOptionList(GROUP(groupColumns));
 
 // ?attributes=id&attributes=sum,amount,total
-export const ATTIBUTE_PARSE_OPTION_MAP = (attributeValues: string[]): SimpleMap<NoNameParseOption> => {
+export const ATTRIBUTE = (attributeValues: string[]): ParseOptionMap => {
   return {
     attributes: {
       type: "array",
@@ -75,8 +75,8 @@ export const ATTIBUTE_PARSE_OPTION_MAP = (attributeValues: string[]): SimpleMap<
     }
   }
 };
-export const ATTIBUTE_PARSE_OPTIONS = (attributeValues: string[]): ParseOption[] =>
-  parseOptionMap2ParseOptionList(ATTIBUTE_PARSE_OPTION_MAP(attributeValues));
+export const ATTRIBUTE_OPTIONS = (attributeValues: string[]): ParseOption[] =>
+  parseOptionMap2ParseOptionList(ATTRIBUTE(attributeValues));
 
 export const DEFAULT_PAGINATION_OPTIONS = {
   maxLimit: 150,
@@ -84,7 +84,7 @@ export const DEFAULT_PAGINATION_OPTIONS = {
 }
 
 // ?limit=10&offset=0
-export const PAGINATION_PARSE_OPTION_MAP = ({ defaultLimit, maxLimit } = DEFAULT_PAGINATION_OPTIONS): SimpleMap<NoNameParseOption> => {
+export const PAGINATION = ({ defaultLimit, maxLimit } = DEFAULT_PAGINATION_OPTIONS): ParseOptionMap => {
   return {
     limit: {
       type: "number",
@@ -103,11 +103,11 @@ export const PAGINATION_PARSE_OPTION_MAP = ({ defaultLimit, maxLimit } = DEFAULT
     }
   };
 };
-export const PAGINATION_PARSE_OPTIONS = (options = DEFAULT_PAGINATION_OPTIONS): ParseOption[] =>
-  parseOptionMap2ParseOptionList(PAGINATION_PARSE_OPTION_MAP(options));
+export const PAGINATION_OPTIONS = (options = DEFAULT_PAGINATION_OPTIONS): ParseOption[] =>
+  parseOptionMap2ParseOptionList(PAGINATION(options));
 
 // ?columns=name&columns=age&q=text
-export const SEARCH_PARSE_OPTION_MAP = (searchColumns: string[]): SimpleMap<NoNameParseOption> => {
+export const SEARCH = (searchColumns: string[]): ParseOptionMap => {
   return {
     columns: {
       type: "array",
@@ -125,11 +125,11 @@ export const SEARCH_PARSE_OPTION_MAP = (searchColumns: string[]): SimpleMap<NoNa
     }
   }
 };
-export const SEARCH_PARSE_OPTIONS: (searchColumns: string[]) => ParseOption[] = (searchColumns: string[]) =>
-  parseOptionMap2ParseOptionList(SEARCH_PARSE_OPTION_MAP(searchColumns));
+export const SEARCH_OPTIONS: (searchColumns: string[]) => ParseOption[] = (searchColumns: string[]) =>
+  parseOptionMap2ParseOptionList(SEARCH(searchColumns));
 
 // ?order=name,DESC&order=age,ASC
-export const ORDER_PARSE_OPTION_MAP = (orderColumns: string[]): SimpleMap<NoNameParseOption> => {
+export const ORDER = (orderColumns: string[]): ParseOptionMap => {
   let enumValues = orderColumns.map(c => `${c},DESC`);
   enumValues = enumValues.concat(orderColumns.map(c => `${c},ASC`));
   return {
@@ -144,5 +144,5 @@ export const ORDER_PARSE_OPTION_MAP = (orderColumns: string[]): SimpleMap<NoName
     }
   }
 };
-export const ORDER_PARSE_OPTIONS = (orderColumns: string[]): ParseOption[] =>
-  parseOptionMap2ParseOptionList(ORDER_PARSE_OPTION_MAP(orderColumns));
+export const ORDER_OPTIONS = (orderColumns: string[]): ParseOption[] =>
+  parseOptionMap2ParseOptionList(ORDER(orderColumns));
