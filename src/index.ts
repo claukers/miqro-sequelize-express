@@ -3,7 +3,9 @@ import {
   Op as SequelizeOp,
   fn as SequelizeFn,
   col as SequelizeCol,
-  FindAttributeOptions
+  FindAttributeOptions,
+  Order,
+  OrderItem
 } from "sequelize";
 
 // ?group=name&group=bla
@@ -131,6 +133,19 @@ export const getWhereOptions = ({ filter, q, columns }: { filter: SimpleMap<any>
   } : {
       ...ignoreUndefined(filter)
     };
+}
+
+export const parseOrder = (order: string[]): Order => {
+  let ret: Order = [];
+  for (let i = 0; i < (order as string[]).length; i++) {
+    const orderI = (order as string[])[i].split(",").map(s => s.trim());
+    if (!(orderI instanceof Array) || orderI.length !== 2 || (orderI[1] !== "DESC" && orderI[1] !== "ASC") || typeof orderI[0] !== "string") {
+      throw new ParseOptionsError(`query.order not array of [column, "DESC"|"ASC"]`);
+    } else {
+      ret.push(orderI as OrderItem);
+    }
+  }
+  return ret;
 }
 
 export const parseAttributes = (attributes: string[]): FindAttributeOptions => {

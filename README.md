@@ -8,7 +8,7 @@ this module provides some transformation for sequelize calls and AuditHandler.
 const {parseOptions} = require("@miqro/core");
 const {getWhereOptions, GROUP, ORDER, PAGINATION, GROUP} = require("@miqro/modelhandlers");
 ...
-const {limit, offset, order, group, q, columns} = parseOptions("query", req.query, {
+const {limit, offset, group, q, columns} = parseOptions("query", req.query, {
   ...ORDER(["createdAt", "id"]),
   ...GROUP(["status"]),
   ...SEARCH(["id"]),
@@ -17,6 +17,7 @@ const {limit, offset, order, group, q, columns} = parseOptions("query", req.quer
     maxlimit: 150
   })
 } , "no_extra");
+const {order} = req.query.order ? parseOrder(req.query.order) : undefined;
 ...
 modelA.findAndCountAll({
   where: getWhereOptions({
