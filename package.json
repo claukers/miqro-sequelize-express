@@ -1,6 +1,6 @@
 {
   "name": "@miqro/modelhandlers",
-  "version": "0.9.39",
+  "version": "0.9.40",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
