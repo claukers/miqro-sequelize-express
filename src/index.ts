@@ -159,7 +159,7 @@ export const parseAttributes = (attributes: string[]): FindAttributeOptions => {
       ret.push(att);
     }
   }
-  return attributes;
+  return ret;
 };
 
 export * from "./audit";
