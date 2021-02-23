@@ -1,6 +1,6 @@
 import { getLogger, Logger, StopWatch } from "@miqro/core";
 import { Database } from "@miqro/database";
-import { CatchHandler, ErrorCallback, NextCallback } from "@miqro/handlers";
+import { NextHandler, ErrorCallback, NextCallback } from "@miqro/handlers";
 import { Request, Response } from "express";
 import { DataTypes, Model, ModelCtor, Sequelize, Transaction } from "sequelize";
 
@@ -62,7 +62,7 @@ export const AuditHandler = (auditModelName = "audit", db: Database, logger?: Lo
   }).catch((e) => {
     (logger as Logger).error(e);
   });
-  return CatchHandler(async (req, res, next) => {
+  return NextHandler(async (req, res) => {
     const originalReq = {
       headers: {
         ...req.headers
@@ -94,13 +94,13 @@ export const AuditHandler = (auditModelName = "audit", db: Database, logger?: Lo
         (logger as Logger).error(e);
       }
     });
-    next();
+    return true;
   });
 }
 
 export const AuditErrorHandler = (logger: Logger): ErrorCallback => {
   logger = logger ? logger : getLogger("AuditErrorHandler");
-  return async (e, req, res, next) => {
+  return (e, req, res, next) => {
     (req as any).audit_error = e;
     logger.error(e);
     next(e);

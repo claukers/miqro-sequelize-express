@@ -20,7 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "@miqro/core": "^0.9.20",
-    "@miqro/handlers": "^0.9.17",
+    "@miqro/handlers": "https://github.com/claukers/miqro-express.git#develop",
     "@miqro/database": "^0.9.11",
     "sequelize": "^6.5.0"
   },
