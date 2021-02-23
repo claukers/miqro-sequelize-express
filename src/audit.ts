@@ -95,7 +95,7 @@ export const AuditHandler = (auditModelName = "audit", db: Database, logger?: Lo
       }
     });
     return true;
-  });
+  }, logger);
 }
 
 export const AuditErrorHandler = (logger: Logger): ErrorCallback => {
