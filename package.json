@@ -1,6 +1,6 @@
 {
   "name": "@miqro/modelhandlers",
-  "version": "0.9.43",
+  "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,8 +20,8 @@
   "license": "ISC",
   "dependencies": {
     "@miqro/core": "^0.9.23",
+    "@miqro/database": "^0.9.12",
     "@miqro/handlers": "^1.0.2",
-    "@miqro/database": "^0.9.11",
     "sequelize": "^6.5.0"
   },
   "devDependencies": {
