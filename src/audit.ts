@@ -1,7 +1,6 @@
 import { getLogger, Logger, StopWatch } from "@miqro/core";
 import { Database } from "@miqro/database";
-import { NextHandler, ErrorCallback, NextCallback } from "@miqro/handlers";
-import { Request, Response } from "express";
+import { Context, ErrorHandler, Handler } from "@miqro/handlers";
 import { DataTypes, Model, ModelCtor, Sequelize, Transaction } from "sequelize";
 
 const AuditModel = (auditModelName: string, sequelize: Sequelize): ModelCtor<Model<any>> => {
@@ -27,25 +26,25 @@ const AuditModel = (auditModelName: string, sequelize: Sequelize): ModelCtor<Mod
   }, {});
 };
 
-const auditLog = async (auditModel: ModelCtor<Model<any>>, req: Request, res?: Response, e?: Error | string, originalRequest?: any, transaction?: Transaction): Promise<void> => {
+const auditLog = async (auditModel: ModelCtor<Model<any>>, ctx: Context, e?: Error | string, originalRequest?: any, transaction?: Transaction): Promise<void> => {
   await auditModel.create({
     originalReq: originalRequest,
-    headers: req ? req.headers : undefined,
-    remoteAddress: req ? req.socket.remoteAddress : undefined,
-    body: req ? req.body : undefined,
-    query: req ? req.query : undefined,
-    params: req ? req.params : undefined,
-    results: req ? req.results : undefined,
-    session: req ? req.session : undefined,
-    username: req && req.session ? req.session.username : undefined,
-    groups: req && req.session ? req.session.groups : undefined,
-    account: req && req.session ? req.session.account : undefined,
-    url: req ? req.url : undefined,
-    method: req ? req.method : undefined,
-    uuid: req ? req.uuid : undefined,
-    took: res ? (res as any).took : undefined,
-    status: res ? res.statusCode : undefined,
-    resHeaders: res ? res.getHeaders() : undefined,
+    headers: ctx ? ctx.headers : undefined,
+    remoteAddress: ctx ? ctx.remoteAddress : undefined,
+    body: ctx ? ctx.body : undefined,
+    query: ctx ? ctx.query : undefined,
+    params: undefined,
+    results: ctx ? ctx.results : undefined,
+    session: ctx ? ctx.session : undefined,
+    username: ctx && ctx.session ? ctx.session.username : undefined,
+    groups: ctx && ctx.session ? ctx.session.groups : undefined,
+    account: ctx && ctx.session ? ctx.session.account : undefined,
+    url: ctx ? ctx.url : undefined,
+    method: ctx ? ctx.method : undefined,
+    uuid: ctx ? ctx.uuid : undefined,
+    took: ctx ? (ctx as any).auditTook : undefined,
+    status: ctx ? ctx.res.statusCode : undefined,
+    resHeaders: ctx ? ctx.res.getHeaders() : undefined,
     error: e ? {
       name: typeof e !== "string" ? e.name : undefined,
       message: typeof e !== "string" ? e.message : e,
@@ -54,7 +53,7 @@ const auditLog = async (auditModel: ModelCtor<Model<any>>, req: Request, res?: R
   }, transaction ? { transaction } : undefined);
 };
 
-export const AuditHandler = (auditModelName = "audit", db: Database, logger?: Logger): NextCallback => {
+export const AuditHandler = (auditModelName = "audit", db: Database, logger?: Logger): Handler => {
   logger = logger ? logger : getLogger("AuditHandler");
   const auditModel = AuditModel(auditModelName, db.sequelize);
   auditModel.sync({
@@ -62,48 +61,45 @@ export const AuditHandler = (auditModelName = "audit", db: Database, logger?: Lo
   }).catch((e) => {
     (logger as Logger).error(e);
   });
-  return NextHandler(async (req, res) => {
+  return async (ctx: Context) => {
     const originalReq = {
       headers: {
-        ...req.headers
+        ...ctx.headers
       },
-      remoteAddress: req.socket.remoteAddress,
-      body: typeof req.body === "object" ? {
-        ...req.body
-      } : req.body,
+      remoteAddress: ctx.remoteAddress,
+      body: typeof ctx.body === "object" ? {
+        ...ctx.body
+      } : ctx.body,
       query: {
-        ...req.query
+        ...ctx.query
       },
       params: {
-        ...req.params
       },
-      results: ([] as any).concat(req.results),
+      results: ([] as any).concat(ctx.results),
       session: {
-        ...req.session
+        ...ctx.session
       },
-      url: req.url,
-      method: req.method,
-      uuid: req.uuid
+      url: ctx.url,
+      method: ctx.method,
+      uuid: ctx.uuid
     };
     const clock = new StopWatch();
-    res.on("finish", async () => {
-      (res as any).took = clock.stop();
+    ctx.res.on("close", async () => {
       try {
-        await auditLog(auditModel, req, res, (req as any).audit_error, originalReq);
+        (ctx as any).auditTook = clock.stop();
+        await auditLog(auditModel, ctx, (ctx as any).audit_error, originalReq);
       } catch (e) {
         (logger as Logger).error(e);
       }
     });
     return true;
-  }, logger);
+  };
 }
 
-export const AuditErrorHandler = (logger: Logger): ErrorCallback => {
-  logger = logger ? logger : getLogger("AuditErrorHandler");
-  return (e, req, res, next) => {
-    (req as any).audit_error = e;
-    logger.error(e);
-    next(e);
+export const AuditErrorHandler = (): ErrorHandler => {
+  return async (e: Error, ctx: Context) => {
+    (ctx as any).audit_error = e;
+    ctx.logger.error(e);
   };
 }
 
