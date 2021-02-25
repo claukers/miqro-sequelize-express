@@ -1,4 +1,4 @@
-import { getLogger, Logger, StopWatch } from "@miqro/core";
+import { getLogger, Logger } from "@miqro/core";
 import { Database } from "@miqro/database";
 import { Context, ErrorHandler, Handler } from "@miqro/handlers";
 import { DataTypes, Model, ModelCtor, Sequelize, Transaction } from "sequelize";
@@ -83,10 +83,9 @@ export const AuditHandler = (auditModelName = "audit", db: Database, logger?: Lo
       method: ctx.method,
       uuid: ctx.uuid
     };
-    const clock = new StopWatch();
     ctx.res.on("close", async () => {
       try {
-        (ctx as any).auditTook = clock.stop();
+        (ctx as any).auditTook = Date.now() - ctx.startMS;
         await auditLog(auditModel, ctx, (ctx as any).audit_error, originalReq);
       } catch (e) {
         (logger as Logger).error(e);

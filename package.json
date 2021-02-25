@@ -19,14 +19,13 @@
   "author": "claukers",
   "license": "ISC",
   "dependencies": {
-    "@miqro/core": "^0.9.20",
-    "@miqro/handlers": "https://github.com/claukers/miqro-express.git#ctx",
+    "@miqro/core": "^0.9.23",
+    "@miqro/handlers": "^1.0.2",
     "@miqro/database": "^0.9.11",
     "sequelize": "^6.5.0"
   },
   "devDependencies": {
     "@types/cookie": "^0.4.0",
-    "@types/express": "^4.17.11",
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.24",
     "@types/validator": "^13.1.3",
