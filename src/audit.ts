@@ -98,7 +98,6 @@ export const AuditHandler = (auditModelName = "audit", db: Database, logger?: Lo
 export const AuditErrorHandler = (): ErrorHandler => {
   return async (e: Error, ctx: Context) => {
     (ctx as any).audit_error = e;
-    ctx.logger.error(e);
   };
 }
 
