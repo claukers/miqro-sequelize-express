@@ -21,7 +21,7 @@
   "dependencies": {
     "@miqro/core": "^0.9.23",
     "@miqro/database": "^0.9.12",
-    "@miqro/handlers": "^1.0.15",
+    "@miqro/handlers": "^1.0.18",
     "sequelize": "^6.5.0"
   },
   "devDependencies": {
@@ -29,9 +29,9 @@
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.24",
     "@types/validator": "^13.1.3",
-    "@typescript-eslint/eslint-plugin": "^4.14.2",
-    "@typescript-eslint/parser": "^4.14.2",
-    "eslint": "^7.19.0",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
+    "eslint": "^7.21.0",
     "typescript": "^4.1.3"
   },
   "engines": {
