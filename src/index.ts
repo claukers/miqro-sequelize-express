@@ -136,7 +136,7 @@ export const getWhereOptions = ({ filter, q, columns }: { filter: SimpleMap<any>
 }
 
 export const parseOrder = (order: string[]): Order => {
-  let ret: Order = [];
+  const ret: Order = [];
   for (let i = 0; i < (order as string[]).length; i++) {
     const orderI = (order as string[])[i].split(",").map(s => s.trim());
     if (!(orderI instanceof Array) || orderI.length !== 2 || (orderI[1] !== "DESC" && orderI[1] !== "ASC") || typeof orderI[0] !== "string") {
