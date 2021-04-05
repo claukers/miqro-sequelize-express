@@ -1,5 +1,4 @@
 import { getLogger, Logger } from "@miqro/core";
-import { Database } from "@miqro/database";
 import { Context, ErrorHandler, Handler } from "@miqro/handlers";
 import { DataTypes, Model, ModelCtor, Sequelize, Transaction } from "sequelize";
 
@@ -53,9 +52,9 @@ const auditLog = async (auditModel: ModelCtor<Model<any>>, ctx: Context, e?: Err
   }, transaction ? { transaction } : undefined);
 };
 
-export const AuditHandler = (auditModelName = "audit", db: Database, logger?: Logger): Handler => {
+export const AuditHandler = (auditModelName = "audit", sequelize: Sequelize, logger?: Logger): Handler => {
   logger = logger ? logger : getLogger("AuditHandler");
-  const auditModel = AuditModel(auditModelName, db.sequelize);
+  const auditModel = AuditModel(auditModelName, sequelize);
   auditModel.sync({
     force: false
   }).catch((e) => {
