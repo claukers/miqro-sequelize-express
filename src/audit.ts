@@ -1,5 +1,4 @@
-import { getLogger, Logger } from "@miqro/core";
-import { Context, ErrorHandler, Handler } from "@miqro/handlers";
+import { ErrorHandler, Handler, Context, getLogger, Logger } from "@miqro/core";
 import { DataTypes, Model, ModelCtor, Sequelize, Transaction } from "sequelize";
 
 const AuditModel = (auditModelName: string, sequelize: Sequelize): ModelCtor<Model<any>> => {
@@ -60,7 +59,7 @@ export const AuditHandler = (auditModelName = "audit", sequelize: Sequelize, log
   }).catch((e) => {
     (logger as Logger).error(e);
   });
-  return async (ctx: Context) => {
+  return async (ctx: Context): Promise<true> => {
     const originalReq = {
       headers: {
         ...ctx.headers
@@ -95,7 +94,7 @@ export const AuditHandler = (auditModelName = "audit", sequelize: Sequelize, log
 }
 
 export const AuditErrorHandler = (): ErrorHandler => {
-  return async (e: Error, ctx: Context) => {
+  return async (e: Error, ctx: Context): Promise<void> => {
     (ctx as any).audit_error = e;
   };
 }
