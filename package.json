@@ -19,7 +19,7 @@
   "author": "claukers",
   "license": "ISC",
   "dependencies": {
-    "@miqro/core": "git+https://github.com/claukers/miqro-core.git",
+    "@miqro/core": "^1.0.1",
     "sequelize": "^6.6.2"
   },
   "devDependencies": {
