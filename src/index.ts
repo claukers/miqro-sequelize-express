@@ -100,15 +100,19 @@ export const getLikeSearch = ({ q, columns }: { q: string; columns: string[]; })
   const searchParams: WhereOptions[] = [];
   if (q !== undefined && columns !== undefined && q !== "") {
     const qSplit = q.split(" ").map(s=>s.trim());
-    for(const qW of qSplit) {
-      for (const c of (columns as string[])) {
-        searchParams.push(SequelizeWhere(
+    for (const c of (columns as string[])) {
+      const likeList: WhereOptions[] = [];
+      for(const qW of qSplit) {
+        likeList.push(SequelizeWhere(
           SequelizeFn('lower', SequelizeCol(c)),
           {
             [SequelizeOp.like]: "%" + String(qW).toLowerCase() + "%"
           }
         ));
       }
+      searchParams.push({
+        [SequelizeOp.and]: likeList
+      });
     }
   }
   return searchParams;
