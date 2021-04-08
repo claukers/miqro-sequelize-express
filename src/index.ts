@@ -99,13 +99,16 @@ export const ORDER_OPTIONS = (orderColumns: string[]): ParseOption[] =>
 export const getLikeSearch = ({ q, columns }: { q: string; columns: string[]; }): WhereOptions[] => {
   const searchParams: WhereOptions[] = [];
   if (q !== undefined && columns !== undefined && q !== "") {
-    for (const c of (columns as string[])) {
-      searchParams.push(SequelizeWhere(
-        SequelizeFn('lower', SequelizeCol(c)),
-        {
-          [SequelizeOp.like]: "%" + String(q).toLowerCase() + "%"
-        }
-      ));
+    const qSplit = q.split(" ").map(s=>s.trim());
+    for(const qW of qSplit) {
+      for (const c of (columns as string[])) {
+        searchParams.push(SequelizeWhere(
+          SequelizeFn('lower', SequelizeCol(c)),
+          {
+            [SequelizeOp.like]: "%" + String(qW).toLowerCase() + "%"
+          }
+        ));
+      }
     }
   }
   return searchParams;
