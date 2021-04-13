@@ -3,6 +3,7 @@ import {
   Op as SequelizeOp,
   fn as SequelizeFn,
   col as SequelizeCol,
+  literal as SequelizeLiteral,
   WhereOptions,
   FindAttributeOptions,
   Order,
@@ -98,23 +99,18 @@ export const ORDER_OPTIONS = (orderColumns: string[]): ParseOption[] =>
 
 export const getLikeSearch = ({ q, columns }: { q: string; columns: string[]; }): WhereOptions[] => {
   const searchParams: WhereOptions[] = [];
+
   if (q !== undefined && columns !== undefined && q !== "") {
-    const qSplit = q.split(" ").map(s=>s.trim());
-    for (const c of (columns as string[])) {
-      const likeList: WhereOptions[] = [];
-      for(const qW of qSplit) {
-        likeList.push(SequelizeWhere(
-          SequelizeFn('lower', SequelizeCol(c)),
-          {
-            [SequelizeOp.like]: "%" + String(qW).toLowerCase() + "%"
-          }
-        ));
-      }
-      searchParams.push({
-        [SequelizeOp.and]: likeList
-      });
+    const qSplit = q.split(" ").map(s=>String(s).trim().toLowerCase());
+    for(const qW of qSplit) {
+      searchParams.push(SequelizeWhere(
+        SequelizeFn('lower', SequelizeLiteral(columns.map(c=>c).join(" || ") )), {
+          [SequelizeOp.like]: "%" + qW + "%"
+        }
+      ));
     }
   }
+
   return searchParams;
 }
 
@@ -131,9 +127,9 @@ const ignoreUndefined = (args: SimpleMap<any>): SimpleMap<any> => {
 export const getWhereOptions = ({ filter, q, columns }: { filter: SimpleMap<any>; q?: string; columns?: string[]; }): WhereOptions => {
   return q && columns ? {
     [SequelizeOp.and]: {
-      ...ignoreUndefined(filter)
-    },
-    [SequelizeOp.or]: getLikeSearch({ q, columns })
+      ...ignoreUndefined(filter),
+      [SequelizeOp.and]: getLikeSearch({ q, columns })
+    }
   } : {
     ...ignoreUndefined(filter)
   };
