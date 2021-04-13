@@ -104,7 +104,7 @@ export const getLikeSearch = ({ q, columns }: { q: string; columns: string[]; })
     const qSplit = q.split(" ").map(s=>String(s).trim().toLowerCase());
     for(const qW of qSplit) {
       searchParams.push(SequelizeWhere(
-        SequelizeFn('lower', SequelizeLiteral(columns.map(c=>c).join(" || ") )), {
+        SequelizeFn('lower', SequelizeLiteral(columns.map(c=>`"${c}"`).join(" || ") )), {
           [SequelizeOp.like]: "%" + qW + "%"
         }
       ));
