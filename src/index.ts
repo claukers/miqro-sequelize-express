@@ -1,4 +1,4 @@
-import { ParseOption, ParseOptionMap, parseOptionMap2ParseOptionList, parseOptions, ParseOptionsError, Map } from "@miqro/core";
+import { ParseOption, ParseOptionMap, parseOptionMap2ParseOptionList, parseOptions, ParseOptionsError, SimpleMap } from "@miqro/core";
 import {
   Op as SequelizeOp,
   fn as SequelizeFn,
@@ -114,7 +114,7 @@ export const getLikeSearch = ({ q, columns }: { q: string; columns: string[]; })
   return searchParams;
 }
 
-const ignoreUndefined = (args: Map<any>): Map<any> => {
+const ignoreUndefined = (args: SimpleMap<any>): SimpleMap<any> => {
   const keys = Object.keys(args);
   for (const key of keys) {
     if (args[key] === undefined) {
@@ -124,7 +124,7 @@ const ignoreUndefined = (args: Map<any>): Map<any> => {
   return args;
 };
 
-export const getWhereOptions = ({ filter, q, columns }: { filter: Map<any>; q?: string; columns?: string[]; }): WhereOptions => {
+export const getWhereOptions = ({ filter, q, columns }: { filter: SimpleMap<any>; q?: string; columns?: string[]; }): WhereOptions => {
   return q && columns ? {
     [SequelizeOp.and]: {
       ...ignoreUndefined(filter),
