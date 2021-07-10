@@ -20,7 +20,7 @@
   "author": "claukers",
   "license": "ISC",
   "dependencies": {
-    "@miqro/core": "^1.1.1",
+    "@miqro/core": "^1.1.2",
     "sequelize": "^6.6.5"
   },
   "devDependencies": {
